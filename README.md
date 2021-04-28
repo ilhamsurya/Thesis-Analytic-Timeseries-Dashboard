@@ -7,18 +7,16 @@
 
 ## Flask Boilerplate Modif V.1.0 [LastUpdate]: 28/04/2021
 
-## Packages
+# Packages
 
-Dillinger uses a number of open source projects to work properly:
-
-- [Flask] - Engine Backend
-- [TailwindCSS] - Library Frontend
-- [Pandas] - Library buat pengolahan data
-- [mysql-connector-python] - Buat konek ke mySQL
-- [dash] - Framework visualisasi grafik
-- [numpy] - Pengolahan data numerik
-- [plotly] - Plotiing grafik,
-- [gunicorn] - Web Server Gateway Interface
+* [Flask] - Engine Backend
+* [TailwindCSS] - Library Frontend
+* [Pandas] - Library buat pengolahan data
+* [mysql-connector-python] - Buat konek ke mySQL
+* [dash] - Framework visualisasi grafik
+* [numpy] - Pengolahan data numerik
+* [plotly] - Plotiing grafik,
+* [gunicorn] - Web Server Gateway Interface
 
 ## Cara Instalasi Env Flask
 
