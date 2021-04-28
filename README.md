@@ -7,6 +7,7 @@
 
 ## Flask Boilerplate Modif V.1.0 [LastUpdate]: 28/04/2021
 
+<<<<<<< HEAD
 ## Packages
 
 - [Flask] - Engine Backend
@@ -17,6 +18,18 @@
 - [numpy] - Pengolahan data numerik
 - [plotly] - Plotiing grafik,
 - [gunicorn] - Web Server Gateway Interface
+=======
+# Packages
+
+* [Flask] - Engine Backend
+* [TailwindCSS] - Library Frontend
+* [Pandas] - Library buat pengolahan data
+* [mysql-connector-python] - Buat konek ke mySQL
+* [dash] - Framework visualisasi grafik
+* [numpy] - Pengolahan data numerik
+* [plotly] - Plotiing grafik,
+* [gunicorn] - Web Server Gateway Interface
+>>>>>>> b96ab168a36e066de568f4169b899494d2b87aca
 
 ## Cara Instalasi Env Flask
 
