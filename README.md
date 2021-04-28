@@ -9,8 +9,6 @@
 
 ## Packages
 
-Dillinger uses a number of open source projects to work properly:
-
 - [Flask] - Engine Backend
 - [TailwindCSS] - Library Frontend
 - [Pandas] - Library buat pengolahan data
