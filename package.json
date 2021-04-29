@@ -7,9 +7,10 @@
     "test": "tests"
   },
   "scripts": {
+    "start": "browser-sync start --server --index \"./app/templates/index.html\"",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:css": "NODE_ENV=production postcss app/static/src/css/tailwind.css -o app/static/dist/css/main.css",
-    "develop:css": "NODE_ENV=development postcss app/static/src/css/tailwind.css -o app/static/dist/css/main.css",
+    "build:css": "NODE_ENV=production postcss app/static/tailwind.css -o app/static/main.css",
+    "develop:css": "NODE_ENV=development postcss app/static/tailwind.css -o app/static/main.css",
     "watch": " watch 'npm run build:css' ./app/templates"
   },
   "keywords": [],
@@ -17,6 +18,9 @@
   "license": "ISC",
   "dependencies": {
     "@fullhuman/postcss-purgecss": "^3.1.0",
+    "@fortawesome/fontawesome-free": "5.15.3",
+    "@tailwindcss/forms": "0.2.1",
+    "browser-sync": "2.26.14",
     "autoprefixer": "^10.1.0",
     "postcss-cli": "^8.3.1",
     "tailwindcss": "^2.0.2",

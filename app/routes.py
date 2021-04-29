@@ -24,16 +24,21 @@ def index():
 # User registration route
 @app.route("/register")
 def register():
-    return render_template("index.html")
+    return render_template("auth/register.html")
 
 
 # User login route
 @app.route("/login")
 def login():
-    return render_template("index.html")
+    return render_template("auth/login.html")
+
+# User Dashboard route
+@app.route("/dashboard")
+def dashboard():
+    return render_template("dashboard/dashboard.html")
 
 
 # 404 Error handler
 @app.errorhandler(404)
 def resource_not_found(e):
-    return render_template("404.html"), 404
+    return render_template("auth/404.html"), 404
