@@ -7,10 +7,9 @@
     "test": "tests"
   },
   "scripts": {
-    "start": "browser-sync start --server --index \"./app/templates/index.html\"",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:css": "NODE_ENV=production postcss app/static/tailwind.css -o app/static/main.css",
-    "develop:css": "NODE_ENV=development postcss app/static/tailwind.css -o app/static/main.css",
+    "build:css": "NODE_ENV=production postcss app/static/src/tailwind.css -o app/static/dist/main.css",
+    "develop:css": "NODE_ENV=development postcss app/static/src/tailwind.css -o app/static/dist/main.css",
     "watch": " watch 'npm run build:css' ./app/templates"
   },
   "keywords": [],

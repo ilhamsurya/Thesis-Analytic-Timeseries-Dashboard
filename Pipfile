@@ -4,6 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [dev-packages]
+black = "*"
 
 [packages]
 flask = "*"
@@ -15,3 +16,6 @@ numpy = "*"
 plotly = "*"
 gunicorn = "*"
 flask-assets = "*"
+
+[pipenv]
+allow_prereleases = true

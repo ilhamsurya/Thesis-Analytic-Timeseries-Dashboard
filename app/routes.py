@@ -32,7 +32,8 @@ def register():
 def login():
     return render_template("auth/login.html")
 
-# User Dashboard route
+
+# User Dashboard roaute
 @app.route("/dashboard")
 def dashboard():
     return render_template("dashboard/dashboard.html")
