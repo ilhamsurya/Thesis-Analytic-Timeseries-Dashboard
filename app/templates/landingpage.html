@@ -75,9 +75,9 @@
           <div class="items-center flex flex-wrap">
             <div class="w-full lg:w-6/12 px-4 ml-auto mr-auto text-center">
               <div>
-                <h1 class="text-white font-semibold text-4xl">
+                <h1 class="my-4 text-3xl md:text-4xl text-white opacity-100 font-bold leading-tight text-center md:text-center">
                   Dashboard
-                  <span class="text-green-200"> Pelanggaran Laut</span>
+                  <span class="bg-clip-text text-transparent bg-gradient-to-r from-white via-grey-700 to-green-500"> Pelanggaran Laut</span>
                 </h1>
                 <p
                   class="mt-4 text-lg text-gray-200"
@@ -108,7 +108,8 @@
       </div>
 
       <!-- About Section -->
-        
+
+   
       <section
         id="about"
         class="relative py-20 absolute top-0 w-full h-full bg-top bg-cover " style="
@@ -124,7 +125,7 @@
             >
               <img
                 alt="..."
-                class="max-w-full rounded-lg shadow-lg"
+                class="mx-auto w-full md:w-4/5 transform -rotate-1 transition hover:scale-105 duration-700 ease-in-out hover:rotate-2"
                 src="../static/assets/img/data analysis.png"
               />
             </div>
@@ -135,7 +136,7 @@
               <div class="md:pr-12">
                 <h3 class="text-4xl uppercase font-bold text-white">
                   Time Series
-                  <span class="text-green-400"> Analysis</span>
+                  <span class="bg-clip-text text-transparent bg-gradient-to-r from-green-600 via-blue-500 to-cyan-700"> Analysis</span>
                 </h3>
                 <p class="mt-4 text-lg leading-relaxed">
                   Time series analysis adalah metode analisis pola hubungan
@@ -148,7 +149,7 @@
                       <div>
                         <span
                           class="font-semibold inline-block py-3 mr-3 text-green-300"
-                          ><i class="fas fa-chart-line fa-2x"></i
+                          ><i class="fas fa-chart-line fa-2x mx-auto w-full md:w-4/5 transform -rotate-1 transition hover:scale-105 duration-700 ease-in-out hover:rotate-2"></i
                         ></span>
                       </div>
                       <div>
@@ -167,7 +168,7 @@
                       <div>
                         <span
                           class="font-semibold inline-block py-3 mr-3 text-green-300"
-                          ><i class="fas fa-chart-area fa-2x"></i
+                          ><i class="fas fa-chart-area fa-2x mx-auto w-full md:w-4/5 transform -rotate-1 transition hover:scale-105 duration-700 ease-in-out hover:rotate-2"></i
                         ></span>
                       </div>
                       <div>
@@ -185,7 +186,7 @@
                       <div>
                         <span
                           class="font-semibold inline-block py-3 mr-3 text-green-400"
-                          ><i class="fas fa-eye fa-2x"></i
+                          ><i class="fas fa-eye fa-2x mx-auto w-full md:w-4/5 transform -rotate-1 transition hover:scale-105 duration-700 ease-in-out hover:rotate-2"></i
                         ></span>
                       </div>
                       <div>
@@ -230,7 +231,7 @@
                 <img
                   alt="..."
                   src="https://img.okezone.com/content/2015/05/22/18/1153603/cari-imigran-gelap-malaysia-kerahkan-empat-kapal-militer-6cCQVlUEjp.jpg"
-                  class="shadow-lg rounded max-w-full mx-auto"
+                  class="shadow-lg rounded max-w-full mx-auto mx-auto w-full md:w-4/5 transform -rotate-0 transition hover:scale-105 duration-700 ease-in-out hover:rotate-3"
                   style="max-width: 300px; max-height: 300px"
                 />
                 <div class="pt-6 text-center">
@@ -251,7 +252,7 @@
                 <img
                   alt="..."
                   src="https://www.spf.org/iina/en/global-data/user29/2021020109421533.jpg"
-                  class="shadow-lg rounded max-w-full mx-auto"
+                  class="shadow-lg rounded max-w-full mx-auto mx-auto w-full md:w-4/5 transform -rotate-0 transition hover:scale-105 duration-700 ease-in-out hover:rotate-3"
                   style="max-width: 300px; max-height: 300px"
                 />
                 <div class="pt-6 text-center">
@@ -274,7 +275,7 @@
                 <img
                   alt="..."
                   src="https://bloximages.newyork1.vip.townnews.com/postandcourier.com/content/tncms/assets/v3/editorial/8/ba/8ba4db3a-180c-11e9-ac94-0be157d932b2/5be34622b3246.image.jpg?resize=1200%2C800"
-                  class="shadow-lg rounded max-w-full mx-auto"
+                  class="shadow-lg rounded max-w-full mx-auto mx-auto w-full md:w-4/5 transform -rotate-0 transition hover:scale-105 duration-700 ease-in-out hover:rotate-3"
                   style="max-width: 300px; max-height: 300px"
                 />
                 <div class="pt-6 text-center">
@@ -291,7 +292,12 @@
         </div>
       </section>
 
-      <section class="pb-20 relative block bg-gray-900">
+      <section
+        id="about"
+        class="relative py-20 absolute top-0 w-full h-full bg-top bg-cover " style="
+            background-image: url('../static/assets/img/header.png');
+          "
+      >
         <div
           class="bottom-auto top-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden -mt-20"
           style="height: 80px"
@@ -314,8 +320,12 @@
         <div class="container mx-auto px-4 lg:pt-24 lg:pb-64">
           <div class="flex flex-wrap text-center justify-center">
             <div class="w-full lg:w-6/12 px-4" >
-              <h2 class="text-4xl font-sans text-white " data-aos="fade-up"
-                data-aos-anchor-placement="center-center">Heatmap Pelanggaran Laut</h2>
+              <h2 class="my-4 text-3xl md:text-4xl text-white opacity-75 font-bold leading-tight text-center md:text-center text-white " data-aos="fade-up"
+                data-aos-anchor-placement="center-center">Heatmap <span
+              class="bg-clip-text text-transparent bg-gradient-to-r from-green-400 via-orange-500 to-red-500"
+            >
+              Pelanggaran Laut
+            </span></h2>
               <p class="text-lg leading-relaxed mt-4 mb-4 text-gray-200" data-aos="fade-zoom-in"
               data-aos-easing="ease-in-back"
               data-aos-delay="300"
@@ -329,7 +339,7 @@
              <img
                   alt="..."
                   src="https://upload.wikimedia.org/wikipedia/commons/8/88/Letak_Laut_Banda_.png"
-          
+                  class="transform -rotate-0 transition hover:scale-105 duration-700 ease-in-out hover:rotate-1"
                   style="max-width: 1100px; max-height: 800px"
               />
           </div>
