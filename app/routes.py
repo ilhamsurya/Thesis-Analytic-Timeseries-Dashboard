@@ -12,13 +12,12 @@ from flask import (
     flash,
 )
 from app import app
-from app.forms import *
-from app.models import *
+
 
 # Home route
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("landingpage.html")
 
 
 # User registration route
@@ -37,6 +36,18 @@ def login():
 @app.route("/dashboard")
 def dashboard():
     return render_template("dashboard/dashboard.html")
+
+
+# User Dashboard roaute
+@app.route("/forecasting")
+def forecasting():
+    return render_template("dashboard/forecasting.html")
+
+
+# User Dashboard roaute
+@app.route("/map")
+def heatmap():
+    return render_template("dashboard/map.html")
 
 
 # 404 Error handler
