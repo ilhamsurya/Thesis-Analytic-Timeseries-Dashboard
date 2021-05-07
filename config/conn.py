@@ -6,7 +6,7 @@ def connect():
         conn = mysql.connect(
             user="root",
             password="",
-            database="sistem-ta",
+            database="time_series",
             host="localhost"
         )
         print(conn)

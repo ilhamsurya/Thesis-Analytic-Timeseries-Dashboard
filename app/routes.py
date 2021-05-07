@@ -12,7 +12,8 @@ from flask import (
     flash,
 )
 from app import app
-
+# from flask_mysqldb import MySQL
+# from conn.py import conn
 
 # Home route
 @app.route("/")
@@ -48,6 +49,15 @@ def forecasting():
 @app.route("/map")
 def heatmap():
     return render_template("dashboard/map.html")
+
+# testing show data 
+# @app.route('/kat')
+# def kategori():
+#     cursor = conn.cursor()
+#     hasil = cursor.execute("SELECT * FROM kategori")
+#     if hasil > 0 :
+#         result = cursor.fetchall()
+#         return render_template('templates/testing.html', result = result)
 
 
 # 404 Error handler

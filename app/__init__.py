@@ -12,4 +12,6 @@ else:
     app.config.from_object('config.ProductionConfig')
 
 # Import routes here
-from app.routes import *
+from app import routes
+#import model here
+from app import models

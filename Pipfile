@@ -16,6 +16,7 @@ numpy = "*"
 plotly = "*"
 gunicorn = "*"
 flask-assets = "*"
+flask-mysqldb = "*"
 
 [pipenv]
 allow_prereleases = true
