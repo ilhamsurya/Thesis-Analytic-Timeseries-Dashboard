@@ -7,6 +7,8 @@
 
 ## Flask Boilerplate Modif V.1.0 [LastUpdate]: 28/04/2021
 
+## created by: Aji, Ilham, Lisa
+
 ## Packages
 
 - [Flask] - Engine Backend
