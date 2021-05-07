@@ -50,16 +50,6 @@ def forecasting():
 def heatmap():
     return render_template("dashboard/map.html")
 
-# testing show data 
-# @app.route('/kat')
-# def kategori():
-#     cursor = conn.cursor()
-#     hasil = cursor.execute("SELECT * FROM kategori")
-#     if hasil > 0 :
-#         result = cursor.fetchall()
-#         return render_template('templates/testing.html', result = result)
-
-
 # 404 Error handler
 @app.errorhandler(404)
 def resource_not_found(e):
