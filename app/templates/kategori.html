@@ -7,11 +7,12 @@
     <title>Show kategori</title>
 </head>
 <body>
-    <table>
+    <table border="1px">
         <thead>
             <tr>
-            <th>ID</th>
-            <th>NAMA</th>
+            <th>Jumlah</th>
+            <th>Tahun</th>
+            <th>Kategori</th>
         </tr>
         </thead>
         <tbody>
@@ -19,6 +20,7 @@
             <tr>
                 <td>{{row.0}}</td>
                 <td>{{row.1}}</td>
+                <td>{{row.2}}</td>
             </tr>
             {% endfor %}
         </tbody>
