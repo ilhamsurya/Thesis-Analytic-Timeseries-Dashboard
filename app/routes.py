@@ -11,9 +11,15 @@ from flask import (
     session,
     flash,
 )
+import flask
+
+
 from app import app
+
+
 # from flask_mysqldb import MySQL
 # from conn.py import conn
+
 
 # Home route
 @app.route("/")
@@ -34,21 +40,16 @@ def login():
 
 
 # User Dashboard roaute
-@app.route("/dashboard")
-def dashboard():
-    return render_template("dashboard/dashboard.html")
-
-
-# User Dashboard roaute
-@app.route("/forecasting")
-def forecasting():
-    return render_template("dashboard/forecasting.html")
+@app.route("/timeseries/")
+def timeseries():
+    return flask.redirect("/timeseries")
 
 
 # User Dashboard roaute
 @app.route("/map")
 def heatmap():
     return render_template("dashboard/map.html")
+
 
 # 404 Error handler
 @app.errorhandler(404)

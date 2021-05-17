@@ -17,6 +17,7 @@ plotly = "*"
 gunicorn = "*"
 flask-assets = "*"
 flask-mysqldb = "*"
+werkzeug = "*"
 
 [pipenv]
 allow_prereleases = true
