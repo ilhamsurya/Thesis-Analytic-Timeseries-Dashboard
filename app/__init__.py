@@ -16,16 +16,31 @@ dash_app1 = dash.Dash(
     ],
 )
 
+dash_app2 = dash.Dash(
+    __name__,
+    server=app,
+    url_base_pathname="/forecasting/",
+    external_stylesheets=[
+        "/static/dist/css/styles.css",
+        "https://fonts.googleapis.com/css?family=Lato",
+    ],
+)
+
 from app.backend.dash_application.timeseries import timeseries
 from app.backend.dash_application.timeseries import timeseries_layout
 
 dash_app1.index_string = timeseries_layout
+# dash_app2.index_string = forecasting_layout
 dash_app1.layout = html.Div(
     children=[
-        html.Div([html.H1("I am built using Dash!")]),
         timeseries,  # this is the component we imported.
     ]
 )
+# dash_app2.layout = html.Div(
+#     children=[
+#         forecasting,  # this is the component we imported.
+#     ]
+# )
 # Import routes here
 from app.routes import *
 
