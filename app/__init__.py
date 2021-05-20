@@ -16,15 +16,15 @@ dash_app1 = dash.Dash(
     ],
 )
 
-dash_app2 = dash.Dash(
-    __name__,
-    server=app,
-    url_base_pathname="/forecasting/",
-    external_stylesheets=[
-        "/static/dist/css/styles.css",
-        "https://fonts.googleapis.com/css?family=Lato",
-    ],
-)
+# dash_app2 = dash.Dash(
+#     __name__,
+#     server=app,
+#     url_base_pathname="/forecasting/",
+#     external_stylesheets=[
+#         "/static/dist/css/styles.css",
+#         "https://fonts.googleapis.com/css?family=Lato",
+#     ],
+# )
 
 from app.backend.dash_application.timeseries import timeseries
 from app.backend.dash_application.timeseries import timeseries_layout

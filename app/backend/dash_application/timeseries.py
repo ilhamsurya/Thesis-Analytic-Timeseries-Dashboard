@@ -13,7 +13,7 @@ import plotly.express as px
 df = create_dataframe()
 
 available_indicators = df["kategori"].unique()
-
+available_locations = df["tempat_kejadian"].unique()
 
 # Create Layout
 timeseries = html.Div(
@@ -22,40 +22,34 @@ timeseries = html.Div(
             [
                 html.Div(
                     [
+                        html.H6(
+                            """Pilih Kategori Pelanggaran""",
+                            style={"margin-right": "2em"},
+                        ),
                         dcc.Dropdown(
-                            id="crossfilter-xaxis-column",
+                            id="crossfilter-kategori",
                             options=[
                                 {"label": i, "value": i} for i in available_indicators
                             ],
-                            value="Fertility rate, total (births per woman)",
-                        ),
-                        dcc.RadioItems(
-                            id="crossfilter-xaxis-type",
-                            options=[
-                                {"label": i, "value": i} for i in ["Linear", "Log"]
-                            ],
-                            value="Linear",
-                            labelStyle={"display": "inline-block"},
+                            value="Pelanggaran laut kategori pertama",
+                            placeholder="Pilih kategori pelanggaran pertama",
                         ),
                     ],
                     style={"width": "49%", "display": "inline-block"},
                 ),
                 html.Div(
                     [
-                        dcc.Dropdown(
-                            id="crossfilter-yaxis-column",
-                            options=[
-                                {"label": i, "value": i} for i in available_indicators
-                            ],
-                            value="Life expectancy at birth, total (years)",
+                        html.H6(
+                            """Pilih Lokasi Pelanggaran""",
+                            style={"margin-right": "2em"},
                         ),
-                        dcc.RadioItems(
-                            id="crossfilter-yaxis-type",
+                        dcc.Dropdown(
+                            id="crossfilter-tempat",
                             options=[
-                                {"label": i, "value": i} for i in ["Linear", "Log"]
+                                {"label": y, "value": y} for y in available_locations
                             ],
-                            value="Linear",
-                            labelStyle={"display": "inline-block"},
+                            value="Tempat Kejadian Pelanggaran Laut)",
+                            placeholder="Pilih tempat pelanggaran pertama",
                         ),
                     ],
                     style={
@@ -65,28 +59,55 @@ timeseries = html.Div(
                     },
                 ),
                 html.Div(
-                    dcc.Slider(
-                        id="crossfilter-year--slider",
-                        min=df["Tahun"].min(),
-                        max=df["Tahun"].max(),
-                        value=df["Tahun"].max(),
-                        marks={
-                            str(tahun): str(tahun) for tahun in df["Tahun"].unique()
-                        },
-                        step=None,
-                    ),
+                    [
+                        dcc.Dropdown(
+                            id="crossfilter-kategori-2",
+                            options=[
+                                {"label": i, "value": i} for i in available_indicators
+                            ],
+                            value="Pelanggaran laut kategori kedua",
+                            placeholder="Pilih kategori pelanggaran kedua",
+                        ),
+                    ],
+                    style={
+                        "width": "49%",
+                        "float": "left",
+                        "display": "inline-block",
+                    },
+                ),
+                html.Div(
+                    [
+                        html.H6(
+                            """Geser Waktu Pelanggaran""",
+                            style={"margin-right": "2em"},
+                        ),
+                        dcc.Slider(
+                            id="crossfilter-year--slider",
+                            min=df["Tahun"].min(),
+                            max=df["Tahun"].max(),
+                            value=df["Tahun"].max(),
+                            step=None,
+                            marks={
+                                str(year): str(year) for year in df["Tahun"].unique()
+                            },
+                        ),
+                    ],
                     style={
                         "width": "100%",
-                        "padding": "0px 20px 20px 20px",
+                        "padding": "80px 80px 80px 80px",
                         "color": "black",
                     },
                 ),
                 html.Div(
                     [
+                        html.H6(
+                            """Grafik Perbandingan Kategori""",
+                            style={"margin-right": "2em"},
+                        ),
                         dcc.Graph(
                             id="crossfilter-indicator-scatter",
-                            hoverData={"points": [{"customdata": "Japan"}]},
-                        )
+                            hoverData={"points": [{"customdata": "Laut Halmahera"}]},
+                        ),
                     ],
                     style={
                         "width": "49%",
@@ -96,7 +117,15 @@ timeseries = html.Div(
                 ),
                 html.Div(
                     [
+                        html.H6(
+                            """Grafik Trend Kategori""",
+                            style={"margin-right": "2em"},
+                        ),
                         dcc.Graph(id="x-time-series"),
+                        html.H6(
+                            """Grafik Season Kategori""",
+                            style={"margin-right": "2em"},
+                        ),
                         dcc.Graph(id="y-time-series"),
                     ],
                     style={"display": "inline-block", "width": "49%"},
@@ -115,50 +144,42 @@ timeseries = html.Div(
 @dash_app1.callback(
     dash.dependencies.Output("crossfilter-indicator-scatter", "figure"),
     [
-        dash.dependencies.Input("crossfilter-xaxis-column", "value"),
-        dash.dependencies.Input("crossfilter-yaxis-column", "value"),
-        dash.dependencies.Input("crossfilter-xaxis-type", "value"),
-        dash.dependencies.Input("crossfilter-yaxis-type", "value"),
+        dash.dependencies.Input("crossfilter-kategori", "value"),
+        dash.dependencies.Input("crossfilter-kategori-2", "value"),
+        # dash.dependencies.Input("crossfilter-tempat", "value"),
         dash.dependencies.Input("crossfilter-year--slider", "value"),
     ],
 )
-def update_graph(
-    xaxis_column_name, yaxis_column_name, xaxis_type, yaxis_type, year_value
-):
+def update_graph(xaxis_column_name, yaxis_column_name, year_value):
     dff = df[df["Tahun"] == year_value]
-
-    fig = px.scatter(
-        x=dff[dff["kategori"] == xaxis_column_name]["kategori"],
-        y=dff[dff["kategori"] == yaxis_column_name]["kategori"],
-        hover_name=dff[dff["kategori"] == yaxis_column_name]["tempat_kejadian"],
+    fig = px.line(
+        x=dff[dff["kategori"] == xaxis_column_name]["tanggal"],
+        y=dff[dff["kategori"] == yaxis_column_name]["tanggal"],
+        # hover_name=dff[dff["kategori"] == yaxis_column_name]["tempat_kejadian"],
     )
 
     fig.update_traces(
         customdata=dff[dff["kategori"] == yaxis_column_name]["tempat_kejadian"]
     )
 
-    fig.update_xaxes(
-        title=xaxis_column_name, type="linear" if xaxis_type == "Linear" else "log"
-    )
+    fig.update_xaxes(title=xaxis_column_name, type="linear")
 
-    fig.update_yaxes(
-        title=yaxis_column_name, type="linear" if yaxis_type == "Linear" else "log"
-    )
+    fig.update_yaxes(title=yaxis_column_name, type="linear")
 
     fig.update_layout(margin={"l": 40, "b": 40, "t": 10, "r": 0}, hovermode="closest")
 
     return fig
 
 
-def create_time_series(dff, axis_type, title):
+def create_time_series(dff, title):
 
-    fig = px.scatter(dff, x="Tahun", y="kategori")
+    fig = px.line(dff, x="Tahun", y="kategori")
 
     fig.update_traces(mode="lines+markers")
 
     fig.update_xaxes(showgrid=False)
 
-    fig.update_yaxes(type="linear" if axis_type == "Linear" else "log")
+    fig.update_yaxes(type="linear")
 
     fig.add_annotation(
         x=0,
@@ -182,27 +203,25 @@ def create_time_series(dff, axis_type, title):
     dash.dependencies.Output("x-time-series", "figure"),
     [
         dash.dependencies.Input("crossfilter-indicator-scatter", "hoverData"),
-        dash.dependencies.Input("crossfilter-xaxis-column", "value"),
-        dash.dependencies.Input("crossfilter-xaxis-type", "value"),
+        dash.dependencies.Input("crossfilter-kategori", "value"),
     ],
 )
-def update_y_timeseries(hoverData, xaxis_column_name, axis_type):
-    country_name = hoverData["points"][0]["customdata"]
-    dff = df[df["tempat_kejadian"] == country_name]
+def update_y_timeseries(hoverData, xaxis_column_name):
+    nama_tempat = hoverData["points"][0]["customdata"]
+    dff = df[df["tempat_kejadian"] == nama_tempat]
     dff = dff[dff["kategori"] == xaxis_column_name]
-    title = "<b>{}</b><br>{}".format(country_name, xaxis_column_name)
-    return create_time_series(dff, axis_type, title)
+    title = "<b>{}</b><br>{}".format(nama_tempat, xaxis_column_name)
+    return create_time_series(dff, title)
 
 
 @dash_app1.callback(
     dash.dependencies.Output("y-time-series", "figure"),
     [
         dash.dependencies.Input("crossfilter-indicator-scatter", "hoverData"),
-        dash.dependencies.Input("crossfilter-yaxis-column", "value"),
-        dash.dependencies.Input("crossfilter-yaxis-type", "value"),
+        dash.dependencies.Input("crossfilter-kategori-2", "value"),
     ],
 )
-def update_x_timeseries(hoverData, yaxis_column_name, axis_type):
+def update_x_timeseries(hoverData, yaxis_column_name):
     dff = df[df["tempat_kejadian"] == hoverData["points"][0]["customdata"]]
     dff = dff[dff["kategori"] == yaxis_column_name]
-    return create_time_series(dff, axis_type, yaxis_column_name)
+    return create_time_series(dff, yaxis_column_name)
