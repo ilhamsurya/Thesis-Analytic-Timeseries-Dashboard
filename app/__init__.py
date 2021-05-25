@@ -4,7 +4,11 @@ import dash
 import dash_html_components as html
 import dash_core_components as dcc
 
+
 app = Flask(__name__)
+app.debug = True
+
+MAPBOX_ACCESS_KEY = os.environ.get("MAPBOX_ACCESS_KEY")
 
 dash_app1 = dash.Dash(
     __name__,
@@ -16,31 +20,33 @@ dash_app1 = dash.Dash(
     ],
 )
 
-# dash_app2 = dash.Dash(
-#     __name__,
-#     server=app,
-#     url_base_pathname="/forecasting/",
-#     external_stylesheets=[
-#         "/static/dist/css/styles.css",
-#         "https://fonts.googleapis.com/css?family=Lato",
-#     ],
-# )
+dash_app2 = dash.Dash(
+    __name__,
+    server=app,
+    url_base_pathname="/forecasting/",
+    external_stylesheets=[
+        "/static/dist/css/styles.css",
+        "https://fonts.googleapis.com/css?family=Lato",
+    ],
+)
 
 from app.backend.dash_application.timeseries import timeseries
+from app.backend.dash_application.forecasting import forecasting
 from app.backend.dash_application.timeseries import timeseries_layout
+from app.backend.dash_application.layout import forecasting_layout
 
 dash_app1.index_string = timeseries_layout
-# dash_app2.index_string = forecasting_layout
+dash_app2.index_string = forecasting_layout
 dash_app1.layout = html.Div(
     children=[
         timeseries,  # this is the component we imported.
     ]
 )
-# dash_app2.layout = html.Div(
-#     children=[
-#         forecasting,  # this is the component we imported.
-#     ]
-# )
+dash_app2.layout = html.Div(
+    children=[
+        forecasting,  # this is the component we imported.
+    ]
+)
 # Import routes here
 from app.routes import *
 

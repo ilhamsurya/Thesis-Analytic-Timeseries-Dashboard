@@ -12,8 +12,8 @@ import plotly.express as px
 # Load DataFrame
 df = create_dataframe()
 
-available_indicators = df["kategori"].unique()
-available_locations = df["tempat_kejadian"].unique()
+daftar_kategori = df["kategori"].unique()
+daftar_lokasi = df["tempat_kejadian"].unique()
 
 # Create Layout
 timeseries = html.Div(
@@ -28,9 +28,7 @@ timeseries = html.Div(
                         ),
                         dcc.Dropdown(
                             id="crossfilter-kategori",
-                            options=[
-                                {"label": i, "value": i} for i in available_indicators
-                            ],
+                            options=[{"label": i, "value": i} for i in daftar_kategori],
                             value="Pelanggaran laut kategori pertama",
                             placeholder="Pilih kategori pelanggaran pertama",
                         ),
@@ -45,9 +43,7 @@ timeseries = html.Div(
                         ),
                         dcc.Dropdown(
                             id="crossfilter-tempat",
-                            options=[
-                                {"label": y, "value": y} for y in available_locations
-                            ],
+                            options=[{"label": y, "value": y} for y in daftar_lokasi],
                             value="Tempat Kejadian Pelanggaran Laut)",
                             placeholder="Pilih tempat pelanggaran pertama",
                         ),
@@ -62,9 +58,7 @@ timeseries = html.Div(
                     [
                         dcc.Dropdown(
                             id="crossfilter-kategori-2",
-                            options=[
-                                {"label": i, "value": i} for i in available_indicators
-                            ],
+                            options=[{"label": i, "value": i} for i in daftar_kategori],
                             value="Pelanggaran laut kategori kedua",
                             placeholder="Pilih kategori pelanggaran kedua",
                         ),
@@ -88,7 +82,15 @@ timeseries = html.Div(
                             value=df["Tahun"].max(),
                             step=None,
                             marks={
-                                str(year): str(year) for year in df["Tahun"].unique()
+                                2014: {"label": "2014", "style": {"color": "#77b0b1"}},
+                                2015: {"label": "2015"},
+                                2016: {"label": "2016"},
+                                2017: {"label": "2017"},
+                                2018: {
+                                    "label": "2018",
+                                },
+                                2019: {"label": "2019", "style": {"color": "#f50"}},
+                                # str(year): str(year) for year in df["Tahun"].unique()
                             },
                         ),
                     ],
@@ -153,8 +155,8 @@ timeseries = html.Div(
 def update_graph(xaxis_column_name, yaxis_column_name, year_value):
     dff = df[df["Tahun"] == year_value]
     fig = px.line(
-        x=dff[dff["kategori"] == xaxis_column_name]["tanggal"],
-        y=dff[dff["kategori"] == yaxis_column_name]["tanggal"],
+        x=dff[dff["kategori"] == xaxis_column_name],
+        y=dff[dff["kategori"] == yaxis_column_name],
         # hover_name=dff[dff["kategori"] == yaxis_column_name]["tempat_kejadian"],
     )
 

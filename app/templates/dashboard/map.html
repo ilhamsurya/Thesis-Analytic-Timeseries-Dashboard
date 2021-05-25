@@ -33,11 +33,19 @@
     </aside>
 {% endblock %}
 {% block content %}
+<head>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <link href='https://api.tiles.mapbox.com/mapbox.js/v2.2.3/mapbox.css' rel='stylesheet' />
+    <script src='https://api.tiles.mapbox.com/mapbox.js/v2.2.3/mapbox.js'></script>
+
+</head>
+<body>
 <div class="w-full overflow-x-hidden border-t flex flex-col">
       <main class="w-full flex-grow p-6">
           <h1 class="text-3xl text-black pb-6">Mapbox</h1>
-         
-         <!-- AlpineJS -->
+            <li><a href="mapbox_js">Mapbox JS</a></li>
+            <li><a href="mapbox_gl">Mapbox GL</a></li>
+    <!-- AlpineJS -->
     <script
       src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"
       defer
@@ -55,4 +63,6 @@
       crossorigin="anonymous"
     ></script>
 </div>
+</body>
+
 {% endblock %}

@@ -18,6 +18,7 @@ gunicorn = "*"
 flask-assets = "*"
 flask-mysqldb = "*"
 werkzeug = "*"
+geojson = "*"
 
 [pipenv]
 allow_prereleases = true

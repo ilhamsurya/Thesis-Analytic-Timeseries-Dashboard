@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title></title>
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.24.0/mapbox-gl.js"></script>
+    <link
+      href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.24.0/mapbox-gl.css"
+      rel="stylesheet"
+    />
+    <script
+      type="text/javascript"
+      src="https://code.jquery.com/jquery-2.1.4.min.js"
+    ></script>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+      }
+
+      .marker {
+        border: none;
+        cursor: pointer;
+        height: 32px;
+        width: 32px;
+        background-image: url(static/marker.png);
+        background-color: rgba(0, 0, 0, 0);
+        transform: translate(28px, 56px, 0);
+      }
+
+      .overlay {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        display: block;
+      }
+
+      .overlay button {
+        font: 600 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+        background-color: #3386c0;
+        color: #fff;
+        display: block;
+        margin: 5px 0 0 0;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        border-radius: 3px;
+      }
+
+      .overlay button:hover {
+        background-color: #4ea0da;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <div class="overlay"></div>
+    <script>
+
+      var counter = 0;
+
+      route = {{route_data|safe}}
+
+      var origin = route.geometry.coordinates[0];
+      var destination = route.geometry.coordinates[route.geometry.coordinates.length - 1];
+
+      var point = {
+          "type": "FeatureCollection",
+          "features": [{
+              "type": "Feature",
+              "geometry": {
+                  "type": "Point",
+                  "coordinates": origin
+              }
+          }]
+      };
+
+      mapboxgl.accessToken = '{{ ACCESS_KEY }}';
+      var map = new mapboxgl.Map({
+          container: 'map',
+          style: 'mapbox://styles/mapbox/streets-v9',
+          center: [-18.73, 65.0],
+          zoom: 6
+      });
+      map.scrollZoom.disable();
+
+      var popup = new mapboxgl.Popup({
+          closeButton: false
+      });
+
+      map.on('load', function () {
+          map.addSource("route", {
+              "type": "geojson",
+              "data": route
+          });
+
+          map.addLayer({
+              "id": "route",
+              "type": "line",
+              "source": "route",
+              "layout": {
+                  "line-join": "round",
+                  "line-cap": "round"
+              },
+              "paint": {
+                  "line-color": "#007cbf",
+                  "line-width": 2
+              }
+          });
+
+          var stop_locations = {{ stop_locations|safe }}
+          stop_locations.forEach(function(marker, index) {
+              var el = document.createElement('div');
+              el.className = 'marker';
+              el.style.left = '-15px';
+              el.style.top = '-32px';
+
+              el.addEventListener('mousemove', function(e) {
+                  var coordinates = map.unproject([e.x, e.y]);
+                  popup.setLngLat(coordinates)
+                    .setText(marker.properties.title)
+                    .addTo(map);
+              });
+
+              el.addEventListener('mouseout', function(e) {
+                  popup.remove();
+              });
+
+              new mapboxgl.Marker(el)
+                  .setLngLat(marker.geometry.coordinates)
+                  .addTo(map);
+
+              // Create location buttons
+              var button = document.createElement('button');
+              button.className = 'location_btn';
+              button.value = marker.properties.location_index;
+              button.innerHTML = "Day " + (index + 1) + " - " + marker.properties.title;
+              $(".overlay").append(button)
+          });
+
+          // Control the location of the car icon
+          $(".location_btn").click(function() {
+              // Get the location index from the button value
+              var location_index = Number($(this).val());
+
+              // Set the location of the car point on the route coordinate
+              point.features[0].geometry.coordinates = route.geometry.coordinates[location_index];
+              map.getSource('point').setData(point);
+
+              // Start the animation from that index
+              counter = location_index;
+              animate(counter);
+          });
+
+          // Add source for the car icon layer
+          map.addSource('point', {
+              "type": "geojson",
+              "data": point
+          });
+
+          // Add car icon layer
+          map.addLayer({
+              "id": "point",
+              "source": "point",
+              "type": "symbol",
+              "layout": {
+                  "icon-image": "car-15",
+                  "icon-size": 1,
+              }
+          });
+
+          function animate() {
+              point.features[0].geometry.coordinates = route.geometry.coordinates[counter]
+              map.getSource('point').setData(point);
+
+              if (point.features[0].geometry.coordinates[0] !== destination[0]) {
+                  requestAnimationFrame(animate);
+              }
+
+              counter = counter + 1;
+          }
+
+          animate();
+
+      });
+    </script>
+  </body>
+</html>
