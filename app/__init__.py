@@ -51,7 +51,7 @@ dash_app2.layout = html.Div(
 from app.routes import *
 
 # importing model here
-from app.backend.model import *
+from app.backend.dash_application.model import *
 
 # app = Flask(__name__, instance_relative_config=False)
 # app = init_dashboard(app)
