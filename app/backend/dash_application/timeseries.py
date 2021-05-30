@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ""Instantiate a Dash app."""
+=======
+"""Instantiate a Dash app."""
+>>>>>>> 08bea8e292a5c505d5bf1bc445bd10f6ef065ad0
 from dash.dependencies import Output,Input, State
 import numpy as np
 import pandas as pd
@@ -305,6 +309,7 @@ def build_graph2( kategori,kategori2):
 # #     fig.update_layout(height=225, margin={"l": 20, "b": 30, "r": 10, "t": 10})
 
 # #     return fig
+<<<<<<< HEAD
 
 
 # # @dash_app1.callback(
@@ -333,3 +338,34 @@ def build_graph2( kategori,kategori2):
 # #     dff = df[df["tempat_kejadian"] == hoverData["points"][0]["customdata"]]
 # #     dff = dff[dff["kategori"] == yaxis_column_name]
 # #     return create_time_series(dff, yaxis_column_name)
+=======
+
+
+# # @dash_app1.callback(
+# #     dash.dependencies.Output("x-time-series", "figure"),
+# #     [
+# #         dash.dependencies.Input("crossfilter-indicator-scatter", "hoverData"),
+# #         dash.dependencies.Input("crossfilter-kategori", "value"),
+# #     ],
+# # )
+# # def update_y_timeseries(hoverData, xaxis_column_name):
+# #     nama_tempat = hoverData["points"][0]["customdata"]
+# #     dff = df[df["tempat_kejadian"] == nama_tempat]
+# #     dff = dff[dff["kategori"] == xaxis_column_name]
+# #     title = "<b>{}</b><br>{}".format(nama_tempat, xaxis_column_name)
+# #     return create_time_series(dff, title)
+
+
+# # @dash_app1.callback(
+# #     dash.dependencies.Output("y-time-series", "figure"),
+# #     [
+# #         dash.dependencies.Input("crossfilter-indicator-scatter", "hoverData"),
+# #         dash.dependencies.Input("crossfilter-kategori-2", "value"),
+# #     ],
+# # )
+# # def update_x_timeseries(hoverData, yaxis_column_name):
+# #     dff = df[df["tempat_kejadian"] == hoverData["points"][0]["customdata"]]
+# #     dff = dff[dff["kategori"] == yaxis_column_name]
+# #     return create_time_series(dff, yaxis_column_name)
+
+>>>>>>> 08bea8e292a5c505d5bf1bc445bd10f6ef065ad0
