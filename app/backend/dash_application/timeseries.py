@@ -1,9 +1,4 @@
-<<<<<<< HEAD
-""Instantiate a Dash app."""
-=======
-"""Instantiate a Dash app."""
->>>>>>> 08bea8e292a5c505d5bf1bc445bd10f6ef065ad0
-from dash.dependencies import Output,Input, State
+from dash.dependencies import Output, Input, State
 import numpy as np
 import pandas as pd
 import dash
@@ -14,16 +9,18 @@ from .layout import timeseries_layout
 from app import dash_app1
 import plotly.express as px
 
+# time series app
+
 
 # Data untuk grafik perbandingan kategori semua tahun
 df = create_dataframe()
-tempat_kejadian = df['tempat_kejadian']
-df['tanggal'] = pd.to_datetime(df['tanggal'])
-df = df.groupby(['tanggal','kategori'], as_index=False)['ID'].count()
-df = df.set_index('tanggal')
-df = df.loc['2014-01-01':'2019-12-30']
-df = df.groupby([pd.Grouper(freq="M"), 'kategori'])['ID'].count().reset_index()
-#Data untuk grafik seasonal per tahun
+tempat_kejadian = df["tempat_kejadian"]
+df["tanggal"] = pd.to_datetime(df["tanggal"])
+df = df.groupby(["tanggal", "kategori"], as_index=False)["ID"].count()
+df = df.set_index("tanggal")
+df = df.loc["2014-01-01":"2019-12-30"]
+df = df.groupby([pd.Grouper(freq="M"), "kategori"])["ID"].count().reset_index()
+# Data untuk grafik seasonal per tahun
 # dt = df.groupby([pd.Grouper(freq="M"), 'Tahun'])['ID'].count().reset_index()
 
 
@@ -50,19 +47,20 @@ timeseries = html.Div(
                             """Tempat Pelanggaran""",
                             style={"margin-right": "2em"},
                         ),
-                        
                         dcc.Dropdown(
                             id="crossfilter-tempat",
-                            options=[{"label": y, "value": y} for y in tempat_kejadian.unique()],
+                            options=[
+                                {"label": y, "value": y}
+                                for y in tempat_kejadian.unique()
+                            ],
                             multi=False,
-                            persistence='string',
-                            persistence_type='local',
+                            persistence="string",
+                            persistence_type="local",
                             placeholder="Pilih tempat pelanggaran",
                         ),
                     ],
                     style={"width": "49%", "display": "inline-block"},
                 ),
-                
                 # html.Div(
                 #     [
                 #         html.H6(
@@ -86,7 +84,6 @@ timeseries = html.Div(
                 #         "display": "inline-block",
                 #     },
                 # ),
-
                 html.Div(
                     [
                         html.H6(
@@ -94,23 +91,27 @@ timeseries = html.Div(
                             style={"margin-right": "2em, font-weight : bold"},
                         ),
                         dcc.Dropdown(
-                            id='crossfilter-kategori',
-                            options=[{"label": i, "value": i} for i in df.sort_values('kategori')['kategori'].unique()],
+                            id="crossfilter-kategori",
+                            options=[
+                                {"label": i, "value": i}
+                                for i in df.sort_values("kategori")["kategori"].unique()
+                            ],
                             clearable=True,
-                            className='form-dropdown',
+                            className="form-dropdown",
                             placeholder="Pilih kategori pelanggaran pertama",
                         ),
-                        
                         html.H6(
-                            
                             """Kategori Pelanggaran 2""",
                             style={"margin-right": "2em, font-weight : bolder"},
                         ),
                         dcc.Dropdown(
-                            id='crossfilter-kategori-2',
-                            options=[{"label": i, "value": i} for i in df.sort_values('kategori')['kategori'].unique()],
+                            id="crossfilter-kategori-2",
+                            options=[
+                                {"label": i, "value": i}
+                                for i in df.sort_values("kategori")["kategori"].unique()
+                            ],
                             clearable=True,
-                            className='form-dropdown',
+                            className="form-dropdown",
                             placeholder="Pilih kategori pelanggaran kedua",
                         ),
                     ],
@@ -120,7 +121,6 @@ timeseries = html.Div(
                         # "display": "inline-block",
                     },
                 ),
-
                 html.Div(
                     [
                         html.H6(
@@ -138,7 +138,9 @@ timeseries = html.Div(
                                 2015: {"label": "2015"},
                                 2016: {"label": "2016"},
                                 2017: {"label": "2017"},
-                                2018: {"label": "2018",},
+                                2018: {
+                                    "label": "2018",
+                                },
                                 2019: {"label": "2019", "style": {"color": "#f50"}},
                                 # str(year): str(year) for year in df["Tahun"].unique()
                             },
@@ -176,11 +178,19 @@ timeseries = html.Div(
                             value=2019,
                             step=None,
                             marks={
-                                2014: {"label": "2014", "style": {"color": "#77b0b1", "top-padding":"10px"}},
+                                2014: {
+                                    "label": "2014",
+                                    "style": {
+                                        "color": "#77b0b1",
+                                        "top-padding": "10px",
+                                    },
+                                },
                                 2015: {"label": "2015"},
                                 2016: {"label": "2016"},
                                 2017: {"label": "2017"},
-                                2018: {"label": "2018",},
+                                2018: {
+                                    "label": "2018",
+                                },
                                 2019: {"label": "2019", "style": {"color": "#f50"}},
                                 # str(year): str(year) for year in df["Tahun"].unique()
                             },
@@ -219,36 +229,45 @@ timeseries = html.Div(
 
 
 @dash_app1.callback(
-    Output('crossfilter-indicator-scatter','figure'),
-    [Input('crossfilter-kategori','value'),
-    Input('crossfilter-kategori-2','value')]
+    Output("crossfilter-indicator-scatter", "figure"),
+    [Input("crossfilter-kategori", "value"), Input("crossfilter-kategori-2", "value")],
 )
-# df['kategori'] == kategori) | 
-def build_graph( kategori,kategori2):
-    dff = df[(df['kategori'] == kategori) | (df['kategori'] == kategori2)]
-    fig = px.line(dff, x = "tanggal", y = "ID", color = 'kategori')
-    fig.update_layout(yaxis = {'title':'Frekuensi'},
-                        xaxis = {'title':'Waktu'},
-                      title = {'text' : 'Grafik Perbandingan Trend', 
-                    'font':{'size':28},'x':0.5,'xanchor':'center'})
+# df['kategori'] == kategori) |
+def build_graph(kategori, kategori2):
+    dff = df[(df["kategori"] == kategori) | (df["kategori"] == kategori2)]
+    fig = px.line(dff, x="tanggal", y="ID", color="kategori")
+    fig.update_layout(
+        yaxis={"title": "Frekuensi"},
+        xaxis={"title": "Waktu"},
+        title={
+            "text": "Grafik Perbandingan Trend",
+            "font": {"size": 28},
+            "x": 0.5,
+            "xanchor": "center",
+        },
+    )
     return fig
 
 
 @dash_app1.callback(
-    Output('seasonality','figure'),
-    [Input('crossfilter-kategori','value'),
-    Input('crossfilter-kategori-2','value')]
+    Output("seasonality", "figure"),
+    [Input("crossfilter-kategori", "value"), Input("crossfilter-kategori-2", "value")],
 )
-# df['kategori'] == kategori) | 
-def build_graph2( kategori,kategori2):
-    dff = df[(df['kategori'] == kategori) | (df['kategori'] == kategori2)]
-    fig2 = px.line(dff, x = "tanggal", y = "ID", color = 'kategori')
-    fig2.update_layout(yaxis = {'title':'Frekuensi'},
-                        xaxis = {'title':'Waktu'},
-                      title = {'text' : 'Grafik Seasonal Perbandingan Trend', 
-                    'font':{'size':28},'x':0.5,'xanchor':'center'})
+# df['kategori'] == kategori) |
+def build_graph2(kategori, kategori2):
+    dff = df[(df["kategori"] == kategori) | (df["kategori"] == kategori2)]
+    fig2 = px.line(dff, x="tanggal", y="ID", color="kategori")
+    fig2.update_layout(
+        yaxis={"title": "Frekuensi"},
+        xaxis={"title": "Waktu"},
+        title={
+            "text": "Grafik Seasonal Perbandingan Trend",
+            "font": {"size": 28},
+            "x": 0.5,
+            "xanchor": "center",
+        },
+    )
     return fig2
-
 
 
 # # @dash_app1.callback(
@@ -309,7 +328,6 @@ def build_graph2( kategori,kategori2):
 # #     fig.update_layout(height=225, margin={"l": 20, "b": 30, "r": 10, "t": 10})
 
 # #     return fig
-<<<<<<< HEAD
 
 
 # # @dash_app1.callback(
@@ -335,37 +353,4 @@ def build_graph2( kategori,kategori2):
 # #     ],
 # # )
 # # def update_x_timeseries(hoverData, yaxis_column_name):
-# #     dff = df[df["tempat_kejadian"] == hoverData["points"][0]["customdata"]]
-# #     dff = dff[dff["kategori"] == yaxis_column_name]
 # #     return create_time_series(dff, yaxis_column_name)
-=======
-
-
-# # @dash_app1.callback(
-# #     dash.dependencies.Output("x-time-series", "figure"),
-# #     [
-# #         dash.dependencies.Input("crossfilter-indicator-scatter", "hoverData"),
-# #         dash.dependencies.Input("crossfilter-kategori", "value"),
-# #     ],
-# # )
-# # def update_y_timeseries(hoverData, xaxis_column_name):
-# #     nama_tempat = hoverData["points"][0]["customdata"]
-# #     dff = df[df["tempat_kejadian"] == nama_tempat]
-# #     dff = dff[dff["kategori"] == xaxis_column_name]
-# #     title = "<b>{}</b><br>{}".format(nama_tempat, xaxis_column_name)
-# #     return create_time_series(dff, title)
-
-
-# # @dash_app1.callback(
-# #     dash.dependencies.Output("y-time-series", "figure"),
-# #     [
-# #         dash.dependencies.Input("crossfilter-indicator-scatter", "hoverData"),
-# #         dash.dependencies.Input("crossfilter-kategori-2", "value"),
-# #     ],
-# # )
-# # def update_x_timeseries(hoverData, yaxis_column_name):
-# #     dff = df[df["tempat_kejadian"] == hoverData["points"][0]["customdata"]]
-# #     dff = dff[dff["kategori"] == yaxis_column_name]
-# #     return create_time_series(dff, yaxis_column_name)
-
->>>>>>> 08bea8e292a5c505d5bf1bc445bd10f6ef065ad0
