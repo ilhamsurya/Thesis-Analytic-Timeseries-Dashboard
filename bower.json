@@ -1,0 +1,20 @@
+{
+  "name": "timeseries_dashboard",
+  "homepage": "https://github.com/ilhamsurya/KoTA103_TSDashboard",
+  "authors": [
+    "KoTA 103"
+  ],
+  "description": "Time series dashboard data pelanggarana laut",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "@turf/turf": "^3.5.2"
+  }
+}
