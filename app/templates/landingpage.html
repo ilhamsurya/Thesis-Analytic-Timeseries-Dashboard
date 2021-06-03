@@ -14,10 +14,7 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
     />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/gh/creativetimofficial/tailwind-starter-kit/compiled-tailwind.min.css"
-    />
+ 
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css"
@@ -39,10 +36,22 @@
           class="w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start"
         >
           <a
-            class="text-lg font-bold leading-relaxed inline-block mr-4 py-2 whitespace-no-wrap uppercase text-white"
+            class="text-lg font-bold leading-relaxed inline-block mr-4 py-2 whitespace-no-wrap  text-white"
             >Time Series Dashboard</a
           >
-
+       <a
+                  href="/login"
+                  class="bg-blue-500 hover:bg-blue-700 text-white font-bold hover:text-white p-4 border border-cyan-500 hover:border-transparent rounded inline-block mt-5 cursor-pointer"
+                  style="margin-left:1100px;"
+                  data-aos="fade-down-right"
+                  >Login</a
+                >
+                <a
+                  href="/register"
+                  class="bg-blue-500 hover:bg-blue-700 text-white font-bold hover:text-white p-4 border border-cyan-700 hover:border-transparent rounded inline-block mt-5 cursor-pointer"
+                  data-aos="fade-down-left"
+                  >Register</a
+                >
           <button
             class="cursor-pointer text-xl leading-none px-3 py-1 border border-solid border-transparent rounded bg-transparent block lg:hidden outline-none focus:outline-none"
             type="button"
@@ -60,12 +69,12 @@
         class="relative pt-16 pb-32 flex content-center items-center justify-center"
         style="min-height: 95vh"
       >
-        <div
-          class="absolute top-0 w-full h-full bg-top bg-cover"
-          style="
-            background-image: url('https://images.unsplash.com/photo-1530053969600-caed2596d242?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=667&q=80');
-          "
-        >
+      <div
+        class="absolute top-0 w-full h-full bg-top bg-cover"
+        style="
+          background-image: url('https://images.unsplash.com/photo-1530053969600-caed2596d242?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=667&q=80');
+        "
+      >
           <span
             id="blackOverlay"
             class="w-full h-full absolute opacity-30 bg-black"
@@ -88,18 +97,7 @@
                   pelanggaran laut secara time series analysis dan menyajikan
                   lokasi kejadian dalam bentuk mapbox.
                 </p>
-                <a
-                  href="/login"
-                  class="bg-blue-500 hover:bg-blue-700 text-white font-bold hover:text-white p-4 border border-cyan-500 hover:border-transparent rounded inline-block mt-5 cursor-pointer"
-                  data-aos="fade-down-right"
-                  >Login</a
-                >
-                <a
-                  href="/register"
-                  class="bg-blue-500 hover:bg-blue-700 text-white font-bold hover:text-white p-4 border border-cyan-700 hover:border-transparent rounded inline-block mt-5 cursor-pointer"
-                  data-aos="fade-down-left"
-                  >Register</a
-                >
+         
               </div>
             </div>
           </div>
@@ -134,7 +132,7 @@
               data-aos="fade-left"
             >
               <div class="md:pr-12">
-                <h3 class="text-4xl uppercase font-bold text-white">
+                <h3 class="text-4xl  font-bold text-white">
                   Time Series
                   <span class="bg-clip-text text-transparent bg-gradient-to-r from-green-600 via-blue-500 to-cyan-700"> Analysis</span>
                 </h3>
@@ -212,7 +210,7 @@
         <div class="container mx-auto px-4 text-white">
           <div class="flex flex-wrap justify-center text-center mb-24">
             <div class="w-full lg:w-6/12 px-4">
-              <h2 class="text-4xl font-semibold uppercase" data-aos="flip-right">Pelanggaran Laut</h2>
+              <h2 class="text-4xl font-semibold " data-aos="flip-right">Pelanggaran Laut</h2>
               <p class="text-lg leading-relaxed m-4" data-aos="flip-left">
                 Adalah seluruh aktivitas oleh individu maupun kelompok yang
                 melawan hukum dan terjadi di seluruh wilayah kelautan Indonesia.
@@ -220,23 +218,25 @@
               </p>
             </div>
           </div>
+
           <!-- Trainer Card Wrapper -->
-          <div class="flex flex-wrap">
+          <div class=" flex space-x-1 scroller">
+            
             <!-- Card 1 -->
             <div
-              class="w-full md:w-4/12 lg:mb-0 mb-12 px-4"
+              class="w-full md:w-4/12 lg:mb-0 mb-12 px-4  "
               data-aos="flip-right"
             >
-              <div class="px-6">
+              <div class="px-6 ">
                 <img
                   alt="..."
                   src="https://img.okezone.com/content/2015/05/22/18/1153603/cari-imigran-gelap-malaysia-kerahkan-empat-kapal-militer-6cCQVlUEjp.jpg"
                   class="shadow-lg rounded max-w-full mx-auto mx-auto w-full md:w-4/5 transform -rotate-0 transition hover:scale-105 duration-700 ease-in-out hover:rotate-3"
-                  style="max-width: 300px; max-height: 300px"
+                  style="max-width: 500px; max-height: 500px"
                 />
                 <div class="pt-6 text-center">
                   <h5 class="text-xl font-bold">Imigran Illegal</h5>
-                  <p class="mt-1 text-sm uppercase font-semibold">
+                  <p class="mt-1 text-sm  font-semibold">
                     sekelompok orang yang masuk atau tinggal di sebuah negara
                     secara tanpa mengikuti undang-undang imigrasi
                   </p>
@@ -253,11 +253,11 @@
                   alt="..."
                   src="https://www.spf.org/iina/en/global-data/user29/2021020109421533.jpg"
                   class="shadow-lg rounded max-w-full mx-auto mx-auto w-full md:w-4/5 transform -rotate-0 transition hover:scale-105 duration-700 ease-in-out hover:rotate-3"
-                  style="max-width: 300px; max-height: 300px"
+                  style="max-width: 500px; max-height: 500px"
                 />
                 <div class="pt-6 text-center">
                   <h5 class="text-xl font-bold">IUU Fishing</h5>
-                  <p class="mt-1 text-sm  uppercase font-semibold">
+                  <p class="mt-1 text-sm   font-semibold">
                     Illegal, Unreported And Unregulated (IUU) Fishing adalah
                     kegiatan perikanan yang tidak sah, tidak dilaporkan pada
                     institusi pengelola perikanan yang berwenang, dan kegiatan
@@ -276,11 +276,11 @@
                   alt="..."
                   src="https://bloximages.newyork1.vip.townnews.com/postandcourier.com/content/tncms/assets/v3/editorial/8/ba/8ba4db3a-180c-11e9-ac94-0be157d932b2/5be34622b3246.image.jpg?resize=1200%2C800"
                   class="shadow-lg rounded max-w-full mx-auto mx-auto w-full md:w-4/5 transform -rotate-0 transition hover:scale-105 duration-700 ease-in-out hover:rotate-3"
-                  style="max-width: 300px; max-height: 300px"
+                  style="max-width: 500px; max-height: 500px"
                 />
                 <div class="pt-6 text-center">
                   <h5 class="text-xl font-bold">Pencurian BMKT</h5>
-                  <p class="mt-1 text-sm  uppercase font-semibold">
+                  <p class="mt-1 text-sm   font-semibold">
                     Pencurian terhadap benda muatan kapal tenggelam (BMKT)
                     adalah Pengangkatan secara ilegal terhadap muatan harta pada
                     kapal yang tenggelam
@@ -340,7 +340,7 @@
                   alt="..."
                   src="https://upload.wikimedia.org/wikipedia/commons/8/88/Letak_Laut_Banda_.png"
                   class="transform -rotate-0 transition hover:scale-105 duration-700 ease-in-out hover:rotate-1"
-                  style="max-width: 1100px; max-height: 800px"
+                  style="max-width: 1100px; max-height: 800px; margin-left:125px"
               />
           </div>
         </div>
@@ -371,9 +371,9 @@
       <div class="container mx-auto px-4">
         <div class="flex flex-wrap">
           <div class="w-full lg:w-6/12 px-4">
-            <h4 class="text-3xl font-semibold">Follow us on social media</h4>
+            <h4 class="text-3xl font-semibold"></h4>
             <h5 class="text-lg mt-0 mb-2 text-gray-700">
-              Find us on any of these platforms, we respond 1-2 business days.
+             
             </h5>
             <div class="mt-6">
               <button
