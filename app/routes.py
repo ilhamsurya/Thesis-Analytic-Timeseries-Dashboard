@@ -44,15 +44,6 @@ def heatmap():
     return render_template("dashboard/map.html")
 
 
-@app.route("/mapbox_js")
-def mapbox_js():
-
-    return render_template(
-        "mapbox_js.html",
-        ACCESS_KEY=MAPBOX_ACCESS_KEY,
-    )
-
-
 # 404 Error handler
 @app.errorhandler(404)
 def resource_not_found(e):
