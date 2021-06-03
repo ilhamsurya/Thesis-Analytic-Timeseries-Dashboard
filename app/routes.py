@@ -7,12 +7,9 @@ from flask import (
 import flask
 from geojson import Point, Feature, FeatureCollection
 from app import app
-from app.backend.mapbox import (
-    create_route_url,
-    create_stop_location_detail,
-    create_stop_locations_details,
-    get_route_data,
-)
+
+
+MAPBOX_ACCESS_KEY = os.environ.get("MAPBOX_ACCESS_KEY")
 
 # from flask_mysqldb import MySQL
 # from conn.py import conn
@@ -49,38 +46,10 @@ def heatmap():
 
 @app.route("/mapbox_js")
 def mapbox_js():
-    route_data, waypoints = get_route_data()
-
-    stop_locations = create_stop_locations_details()
 
     return render_template(
         "mapbox_js.html",
         ACCESS_KEY=MAPBOX_ACCESS_KEY,
-        route_data=route_data,
-        stop_locations=stop_locations,
-    )
-
-
-@app.route("/mapbox_gl")
-def mapbox_gl():
-    route_data, waypoints = get_route_data()
-
-    stop_locations = create_stop_locations_details()
-
-    # For each stop location, add the waypoint index
-    # that we got from the route data
-    for stop_location in stop_locations:
-        waypoint_index = stop_location.properties["route_index"]
-        waypoint = waypoints[waypoint_index]
-        stop_location.properties["location_index"] = route_data["geometry"][
-            "coordinates"
-        ].index(waypoint["location"])
-
-    return render_template(
-        "mapbox_gl.html",
-        ACCESS_KEY=MAPBOX_ACCESS_KEY,
-        route_data=route_data,
-        stop_locations=stop_locations,
     )
 
 

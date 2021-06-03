@@ -30,10 +30,23 @@ dash_app2 = dash.Dash(
     ],
 )
 
+dash_app3 = dash.Dash(
+    __name__,
+    server=app,
+    url_base_pathname="/mapbox/",
+    external_stylesheets=[
+        "/static/dist/css/styles.css",
+        "https://fonts.googleapis.com/css?family=Lato",
+    ],
+)
+
+
 from app.backend.dash_application.timeseries import timeseries
 from app.backend.dash_application.forecasting import forecasting
+from app.backend.dash_application.mapbox import mapbox
 from app.backend.dash_application.timeseries import timeseries_layout
 from app.backend.dash_application.layout import forecasting_layout
+from app.backend.dash_application.layout import mapbox_layout
 
 dash_app1.index_string = timeseries_layout
 dash_app2.index_string = forecasting_layout
@@ -45,6 +58,12 @@ dash_app1.layout = html.Div(
 dash_app2.layout = html.Div(
     children=[
         forecasting,  # this is the component we imported.
+    ]
+)
+
+dash_app3.layout = html.Div(
+    children=[
+        mapbox,  # this is the component we imported.
     ]
 )
 # Import routes here
