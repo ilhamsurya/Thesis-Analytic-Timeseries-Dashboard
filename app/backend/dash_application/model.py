@@ -29,14 +29,14 @@
 # @app.route("/kategori")
 # def kategori():
 #     df = create_dataframe()
-#     # df['Tanggal'] =
+#     # df['Tanggal'] = 
 #     # df['tanggal'] = pd.to_datetime(df['tanggal'])
 #     # df = df.groupby(['tanggal','kategori'], as_index=False)['ID'].count()
 #     # df = df.set_index('tanggal')
 #     # df = df.loc['2014-01-01':'2019-12-30']
 #     # df = df.groupby([pd.Grouper(freq="M"), 'kategori'])['ID'].count().reset_index()
 #     # print(df)
-
+    
 #     return render_template('kategori.html', kategori = df)
 
 

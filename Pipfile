@@ -19,6 +19,7 @@ flask-assets = "*"
 flask-mysqldb = "*"
 werkzeug = "*"
 geojson = "*"
+python-dotenv = "*"
 
 [pipenv]
 allow_prereleases = true
