@@ -559,14 +559,14 @@ mapbox_layout = """
         </a>
         <a
           href="/forecasting"
-          class="flex items-center active-nav-link text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
+          class="flex items-center  text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
         >
           <i class="fas fa-eye mr-3"></i>
           Forecasting
         </a>
         <a
           href="/map"
-          class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
+          class="flex items-center active-nav-link text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item"
         >
           <i class="fas fa-globe-asia mr-3"></i>
           Map Pelanggaran

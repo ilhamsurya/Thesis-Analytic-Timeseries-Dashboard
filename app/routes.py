@@ -38,10 +38,10 @@ def timeseries():
     return flask.redirect("/timeseries")
 
 
-# User Dashboard roaute
-@app.route("/map")
-def heatmap():
-    return render_template("dashboard/map.html")
+# # User Dashboard roaute
+# @app.route("/map")
+# def heatmap():
+#     return render_template("dashboard/map.html")
 
 
 # 404 Error handler
