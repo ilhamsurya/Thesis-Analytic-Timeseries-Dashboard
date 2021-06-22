@@ -6,7 +6,7 @@ from flask import (
 )
 import flask
 from geojson import Point, Feature, FeatureCollection
-from app import app
+from app import server
 
 
 MAPBOX_ACCESS_KEY = os.environ.get("MAPBOX_ACCESS_KEY")
@@ -15,25 +15,25 @@ MAPBOX_ACCESS_KEY = os.environ.get("MAPBOX_ACCESS_KEY")
 # from conn.py import conn
 
 # Home route
-@app.route("/")
+@server.route("/")
 def index():
     return render_template("landingpage.html")
 
 
 # User registration route
-@app.route("/register")
+@server.route("/register")
 def register():
     return render_template("auth/register.html")
 
 
 # User login route
-@app.route("/login")
+@server.route("/login")
 def login():
     return render_template("auth/login.html")
 
 
 # User Dashboard roaute
-@app.route("/timeseries/")
+@server.route("/timeseries/")
 def timeseries():
     return flask.redirect("/timeseries")
 
@@ -45,6 +45,6 @@ def timeseries():
 
 
 # 404 Error handler
-@app.errorhandler(404)
+@server.errorhandler(404)
 def resource_not_found(e):
     return render_template("auth/404.html"), 404

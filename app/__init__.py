@@ -4,13 +4,13 @@ import dash_html_components as html
 import dash_core_components as dcc
 
 
-app = Flask(__name__)
-app.debug = True
+server = Flask(__name__)
+server.debug = True
 
 
 dash_app1 = dash.Dash(
     __name__,
-    server=app,
+    server=server,
     url_base_pathname="/timeseries/",
     external_stylesheets=[
         "/static/dist/css/styles.css",
@@ -20,7 +20,7 @@ dash_app1 = dash.Dash(
 
 dash_app2 = dash.Dash(
     __name__,
-    server=app,
+    server=server,
     url_base_pathname="/forecasting/",
     external_stylesheets=[
         "/static/dist/css/styles.css",
@@ -30,7 +30,7 @@ dash_app2 = dash.Dash(
 
 dash_app3 = dash.Dash(
     __name__,
-    server=app,
+    server=server,
     url_base_pathname="/map/",
     external_stylesheets=[
         "/static/dist/css/styles.css",
