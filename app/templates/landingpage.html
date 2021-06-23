@@ -24,7 +24,7 @@
     <link rel="stylesheet" type="text/css" href="../static/dist/main.css" />
     <title>Time Series & Forecasting Dashboard</title>
   </head>
-  <body class="text-gray-800 antialiased">
+  <body class="text-gray-800 antialiased no-scrollbar ">
     <!-- Navbar -->
     <nav
       class="top-0 absolute z-50 w-full flex flex-wrap items-center justify-between px-2 py-3 navbar-expand-lg"
@@ -60,6 +60,7 @@
       <div
         class="absolute top-0 w-full h-full bg-top bg-cover"
         style="
+          height: 100%;
           background-image: url('https://images.unsplash.com/photo-1530053969600-caed2596d242?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=667&q=80');
         "
       >
@@ -68,9 +69,9 @@
             class="w-full h-full absolute opacity-30 bg-black"
           ></span>
         </div>
-        <div class="container relative mx-auto" data-aos="fade-in">
+        <div class="container relative mx-auto " data-aos="fade-in">
           <div class="items-center flex flex-wrap">
-            <div class="w-full lg:w-6/12 px-4 ml-auto mr-auto text-center">
+            <div class="w-full lg:w-6/12 px-4 ml-auto mr-auto text-center" style="margin-top: 50px;">
               <div>
                 <h1 class="my-4 text-3xl md:text-4xl text-white opacity-100 font-bold leading-tight text-center md:text-center">
                   Dashboard
@@ -80,26 +81,19 @@
                   class="mt-4 text-lg text-gray-200"
                   data-aos="fade-up"
                   data-aos-anchor-placement="center-bottom"
+                  style="margin-top: 50px; "
                 >
                   Merupakan aplikasi web dashboard yang menyajikan data
                   pelanggaran laut secara time series analysis dan menyajikan
-                  lokasi kejadian dalam bentuk mapbox.
+                  lokasi kejadian dalam bentuk mapbox.    
                 </p>
-                
-                
-                
+              
                 <a
-                  href="/login"
-                  class="bg-blue-500 hover:bg-blue-700 text-white font-bold hover:text-white p-4 border border-cyan-500 hover:border-transparent rounded inline-block mt-5 cursor-pointer"
-                  style="margin-left:0;"
-                  data-aos="fade-down-right"
-                  >Login</a
-                >
-                <a
-                  href="/register"
+                  href="/timeseries"
                   class="bg-green-500 hover:bg-green-700 text-white font-bold hover:text-white p-4 border border-cyan-700 hover:border-transparent rounded inline-block mt-5 cursor-pointer"
+                  style="margin-top: 50px; margin-bottom: 150px;"
                   data-aos="fade-down-left"
-                  >Register</a
+                  >Lihat Dashboard</a
                 >
               </div>
             </div>
@@ -221,21 +215,20 @@
               </p>
             </div>
           </div>
-
           <!-- Trainer Card Wrapper -->
-          <div class=" flex space-x-1 scroller">
+          <div class=" flex space-x-1 overflow-x-hidden ">
             
             <!-- Card 1 -->
             <div
-              class="w-full md:w-4/12 lg:mb-0 mb-12 px-4  "
+              class="w-full md:w-4/12 lg:mb-0 mb-12 px-4 scroller "
               data-aos="flip-right"
             >
               <div class="px-6 ">
                 <img
                   alt="..."
                   src="https://img.okezone.com/content/2015/05/22/18/1153603/cari-imigran-gelap-malaysia-kerahkan-empat-kapal-militer-6cCQVlUEjp.jpg"
-                  class="shadow-lg rounded max-w-full mx-auto mx-auto w-full md:w-4/5 transform -rotate-0 transition hover:scale-105 duration-700 ease-in-out hover:rotate-3"
-                  style="max-width: 500px; max-height: 500px"
+                  class="shadow-lg rounded mx-auto my-auto  transform -rotate-0 transition hover:scale-105 duration-700 ease-in-out hover:rotate-3"
+                  style="max-width: 250px; max-height: 250px"
                 />
                 <div class="pt-6 text-center">
                   <h5 class="text-xl font-bold">Imigran Illegal</h5>
@@ -248,15 +241,15 @@
             </div>
             <!-- Card 2 -->
             <div
-              class="w-full md:w-4/12 lg:mb-0 mb-12 px-4"
+              class="w-full md:w-4/12 lg:mb-0 mb-12 px-4 scroller"
               data-aos="flip-right"
             >
-              <div class="px-6">
+              <div class="px-6 ">
                 <img
                   alt="..."
                   src="https://www.spf.org/iina/en/global-data/user29/2021020109421533.jpg"
-                  class="shadow-lg rounded max-w-full mx-auto mx-auto w-full md:w-4/5 transform -rotate-0 transition hover:scale-105 duration-700 ease-in-out hover:rotate-3"
-                  style="max-width: 500px; max-height: 500px"
+                  class="shadow-lg rounded mx-auto my-auto  transform -rotate-0 transition hover:scale-105 duration-700 ease-in-out hover:rotate-3"
+                  style="max-width: 250px; max-height: 250px"
                 />
                 <div class="pt-6 text-center">
                   <h5 class="text-xl font-bold">IUU Fishing</h5>
@@ -270,15 +263,15 @@
             </div>
             <!-- Card 3 -->
             <div
-              class="w-full md:w-4/12 lg:mb-0 mb-12 px-4"
+              class="w-full md:w-4/12 lg:mb-0 mb-12 px-4 scroller"
               data-aos="flip-right"
             >
               <div class="px-6">
                 <img
                   alt="..."
                   src="https://bloximages.newyork1.vip.townnews.com/postandcourier.com/content/tncms/assets/v3/editorial/8/ba/8ba4db3a-180c-11e9-ac94-0be157d932b2/5be34622b3246.image.jpg?resize=1200%2C800"
-                  class="shadow-lg rounded max-w-full mx-auto mx-auto w-full md:w-4/5 transform -rotate-0 transition hover:scale-105 duration-700 ease-in-out hover:rotate-3"
-                  style="max-width: 500px; max-height: 500px"
+                  class="shadow-lg rounded mx-auto my-auto  transform -rotate-0 transition hover:scale-105 duration-700 ease-in-out hover:rotate-3"
+                  style="max-width: 250px; max-height: 250px"
                 />
                 <div class="pt-6 text-center">
                   <h5 class="text-xl font-bold">Pencurian BMKT</h5>
@@ -292,15 +285,15 @@
             </div>
                         <!-- Card 4 -->
             <div
-              class="w-full md:w-4/12 lg:mb-0 mb-12 px-4"
+              class="w-full md:w-4/12 lg:mb-0 mb-12 px-4 scroller"
               data-aos="flip-right"
             >
               <div class="px-6">
                 <img
                   alt="..."
                   src="https://disk.mediaindonesia.com/thumbs/1800x1200/news/2019/12/fea48975c8e7251f565a39a956048e3c.jpg"
-                  class="shadow-lg rounded max-w-full mx-auto mx-auto w-full md:w-4/5 transform -rotate-0 transition hover:scale-105 duration-700 ease-in-out hover:rotate-3"
-                  style="max-width: 500px; max-height: 500px"
+                  class="shadow-lg rounded mx-auto my-auto  transform -rotate-0 transition hover:scale-105 duration-700 ease-in-out hover:rotate-3"
+                  style="max-width: 250px; max-height: 250px"
                 />
                 <div class="pt-6 text-center">
                   <h5 class="text-xl font-bold">Pelanggaran Batas</h5>
@@ -310,22 +303,120 @@
                 </div>
               </div>
             </div>
-                        <!-- Card 3 -->
+                        <!-- Card 5 -->
             <div
-              class="w-full md:w-4/12 lg:mb-0 mb-12 px-4"
+              class="w-full md:w-4/12 lg:mb-0 mb-12 px-4 scroller"
               data-aos="flip-right"
             >
               <div class="px-6">
                 <img
                   alt="..."
                   src="https://assets-a1.kompasiana.com/items/album/2017/10/20/people-smuggling-59e996a548693267db2355d5.jpg"
-                  class="shadow-lg rounded max-w-full mx-auto mx-auto w-full md:w-4/5 transform -rotate-0 transition hover:scale-105 duration-700 ease-in-out hover:rotate-3"
-                  style="max-width: 500px; max-height: 500px"
+                  class="shadow-lg rounded mx-auto my-auto  transform -rotate-0 transition hover:scale-105 duration-700 ease-in-out hover:rotate-3"
+                  style="max-width: 250px; max-height: 250px"
                 />
                 <div class="pt-6 text-center">
                   <h5 class="text-xl font-bold">Perdagangan Manusia</h5>
                   <p class="mt-1 text-sm   font-semibold">
-Tindakan perekrutan, pengangkutan, penampungan, atau penerimaan seseorang dengan ancaman kekerasan
+                    Tindakan perekrutan, pengangkutan, penampungan, atau penerimaan seseorang dengan ancaman kekerasan
+                  </p>
+                </div>
+              </div>
+            </div>
+                  <!-- Card 5 -->
+            <div
+              class="w-full md:w-4/12 lg:mb-0 mb-12 px-4 scroller"
+              data-aos="flip-right"
+            >
+              <div class="px-6">
+                <img
+                  alt="..."
+                  src="https://www.wired.com/images_blogs/dangerroom/2012/06/pirate_caught.jpg"
+                  class="shadow-lg rounded mx-auto my-auto  transform -rotate-0 transition hover:scale-105 duration-700 ease-in-out hover:rotate-3"
+                  style="max-width: 250px; max-height: 250px"
+                />
+                <div class="pt-6 text-center">
+                  <h5 class="text-xl font-bold">Perompakan</h5>
+                  <p class="mt-1 text-sm   font-semibold">
+                   Usaha perampokan yang dilakukan di lautan, atau kadang-kadang di pantai.
+                  </p>
+                </div>
+              </div>
+            </div>
+                  <!-- Card 5 -->
+            <div
+              class="w-full md:w-4/12 lg:mb-0 mb-12 px-4 scroller"
+              data-aos="flip-right"
+            >
+              <div class="px-6">
+                <img
+                  alt="..."
+                  src="https://www.matamatapolitik.com/wp-content/uploads/sites/2/2020/07/maxresdefault-8.jpg"
+                  class="shadow-lg rounded mx-auto my-auto  transform -rotate-0 transition hover:scale-105 duration-700 ease-in-out hover:rotate-3"
+                  style="max-width: 250px; max-height: 250px"
+                />
+                <div class="pt-6 text-center">
+                  <h5 class="text-xl font-bold">Pertikaian di Laut</h5>
+                  <p class="mt-1 text-sm   font-semibold">
+                    Konflik antara beberapa pihak yang terjadi di lautan
+                  </p>
+                </div>
+              </div>
+            </div>
+                  <!-- Card 5 -->
+            <div
+              class="w-full md:w-4/12 lg:mb-0 mb-12 px-4 scroller"
+              data-aos="flip-right"
+            >
+              <div class="px-6">
+                <img
+                  alt="..."
+                  src="https://bingar.id/wp-content/uploads/2020/09/antarafoto-sampah-di-pantai-110820-bcs-7-scaled.jpg"
+                  class="shadow-lg rounded mx-auto my-auto  transform -rotate-0 transition hover:scale-105 duration-700 ease-in-out hover:rotate-3"
+                  style="max-width: 250px; max-height: 250px"
+                />
+                <div class="pt-6 text-center">
+                  <h5 class="text-xl font-bold">Perusakan ekosistem</h5>
+                  <p class="mt-1 text-sm   font-semibold">
+                   Tindakan perusakan ekosistem baik secara langsung maupun tidak langsung
+                  </p>
+                </div>
+              </div>
+            </div>
+                        <div
+              class="w-full md:w-4/12 lg:mb-0 mb-12 px-4 scroller"
+              data-aos="flip-right"
+            >
+              <div class="px-6">
+                <img
+                  alt="..."
+                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Flag_of_Edward_England.svg/2000px-Flag_of_Edward_England.svg.png"
+                  class="shadow-lg rounded mx-auto my-auto  transform -rotate-0 transition hover:scale-105 duration-700 ease-in-out hover:rotate-3"
+                  style="max-width: 250px; max-height: 250px"
+                />
+                <div class="pt-6 text-center">
+                  <h5 class="text-xl font-bold">Piracy</h5>
+                  <p class="mt-1 text-sm   font-semibold">
+                    Upaya pembajakan terhadap harta laut 
+                  </p>
+                </div>
+              </div>
+            </div>
+                        <div
+              class="w-full md:w-4/12 lg:mb-0 mb-12 px-4 scroller"
+              data-aos="flip-right"
+            >
+              <div class="px-6">
+                <img
+                  alt="..."
+                  src="https://media.mehrnews.com/d/2019/06/13/4/3152934.jpg"
+                  class="shadow-lg rounded mx-auto my-auto  transform -rotate-0 transition hover:scale-105 duration-700 ease-in-out hover:rotate-3"
+                  style="max-width: 250px; max-height: 250px"
+                />
+                <div class="pt-6 text-center">
+                  <h5 class="text-xl font-bold">Sabotase</h5>
+                  <p class="mt-1 text-sm   font-semibold">
+                    Tindakan mengambil alih yang illegal dan terjadi di lautan
                   </p>
                 </div>
               </div>
@@ -386,7 +477,8 @@ Tindakan perekrutan, pengangkutan, penampungan, atau penerimaan seseorang dengan
               />
           </div>
         </div>
-      </section>
+
+      
     </main>
 
     <!-- Footer -->
@@ -409,34 +501,12 @@ Tindakan perekrutan, pengangkutan, penampungan, atau penerimaan seseorang dengan
             points="2560 0 2560 100 0 100"
           ></polygon>
         </svg>
+        
       </div>
+
       <div class="container mx-auto px-4">
         <div class="flex flex-wrap">
-          <div class="w-full lg:w-6/12 px-4">
-            <h4 class="text-3xl font-semibold"></h4>
-            <h5 class="text-lg mt-0 mb-2 text-gray-700">
-             
-            </h5>
-            <div class="mt-6">
-              <button
-                class="bg-white text-blue-400 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2 p-3"
-                type="button"
-              >
-                <i class="flex fab fa-twitter text-orange-500"></i></button
-              ><button
-                class="bg-white text-blue-600 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2 p-3"
-                type="button"
-              >
-                <i
-                  class="flex fab fa-facebook-square text-orange-500"
-                ></i></button
-              ><button
-                class="bg-white text-pink-400 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2 p-3"
-                type="button"
-              >
-                <i class="flex fab fa-linkedin text-orange-500"></i>
-              </button>
-            </div>
+    
           </div>
         </div>
         <hr class="my-6 border-gray-400" />
