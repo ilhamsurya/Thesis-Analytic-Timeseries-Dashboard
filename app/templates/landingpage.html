@@ -14,7 +14,10 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
     />
- 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@100;500&family=Montserrat&display=swap" rel="stylesheet">
+    
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css"
@@ -24,7 +27,7 @@
     <link rel="stylesheet" type="text/css" href="../static/dist/main.css" />
     <title>Time Series & Forecasting Dashboard</title>
   </head>
-  <body class="text-gray-800 antialiased no-scrollbar ">
+  <body class="text-gray-800 antialiased no-scrollbar " style="font-family: 'Montserrat', sans-serif;" >
     <!-- Navbar -->
     <nav
       class="top-0 absolute z-50 w-full flex flex-wrap items-center justify-between px-2 py-3 navbar-expand-lg"
@@ -69,7 +72,7 @@
             class="w-full h-full absolute opacity-30 bg-black"
           ></span>
         </div>
-        <div class="container relative mx-auto " data-aos="fade-in">
+        <div class="container relative mx-auto " data-aos="fade-in" style="font-family: 'Archivo', sans-serif;">
           <div class="items-center flex flex-wrap">
             <div class="w-full lg:w-6/12 px-4 ml-auto mr-auto text-center" style="margin-top: 50px;">
               <div>
@@ -101,17 +104,60 @@
         </div>
 
       </div>
+<h1 class="section-heading">Anggota Tim KoTA 103</h1>
+<div class="color-list">
+ 
+  <section class="color" style="background: rgb(69, 89, 116);">
+    <h2 class="name">Aji Muhammad Zapar - 181511005</h2>
 
-      <!-- About Section -->
+    <ul class="details">
+      <li>Deskripsi 1</li>
+      <li>Deskripsi 2</li>
+      <li>Deskripsi 3</li>
 
-   
-      <section
-        id="about"
-        class="relative py-20 absolute top-0 w-full h-full bg-top bg-cover " style="
-            background-image: url('https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=667&q=80');
-          "
-      >
+    </ul>
+  </section>
 
+  <section class="color" style="background: rgb(82, 141, 117);">
+    <h2 class="name">Muhammad Ilham Surya - 181511025</h2>
+          <img
+    onmouseover="changePic3()"
+    onmouseout="changePic4()"
+    id="myImg2"
+    src=""
+    width="360"
+    height="360"
+      />
+    <ul class="details">
+      <li>Deskripsi 1</li>
+      <li>Deskripsi 2</li>
+      <li>Deskripsi 3</li>
+    </ul>
+  </section>
+  
+  <section class="color" style="background: rgb(136, 87, 90);">
+    <h2 class="name">Nurallisha Rahmanda - 181511026</h2>
+
+
+    <ul class="details">
+      <li>Deskripsi 1</li>
+      <li>Deskripsi 2</li>
+      <li>Deskripsi 3</li>
+    </ul>
+  </section>
+
+</div>
+
+<h1 class="section-heading">Analisis Yang Dilakukan</h1>     
+
+<section
+  id="about"
+  class="relative py-20 absolute top-0 w-full h-full bg-top bg-cover"
+  style="
+    background-image: url('https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=667&q=80');
+  "
+>
+  
         <div class="container mx-auto px-4 text-white ">
           <div class="items-center flex flex-wrap">
             <div
@@ -200,6 +246,7 @@
         </div>
       </section>
 
+<h1 class="section-heading2">Kasus Yang Diolah</h1>   
       <!-- Trainers Section -->
       <section  class="relative py-20 absolute top-0 w-full h-full bg-top bg-cover " style="
             background-image: url('https://w.wallha.com/ws/5/4RVkq3bF.png');
@@ -424,7 +471,7 @@
           </div>
         </div>
       </section>
-
+<h1 class="section-heading3">Visualisasi Map Pelanggaran</h1>   
       <section
         id="about"
         class="relative py-20 absolute top-0 w-full h-full bg-top bg-cover " style="
@@ -473,7 +520,7 @@
                   alt="..."
                   src="https://upload.wikimedia.org/wikipedia/commons/8/88/Letak_Laut_Banda_.png"
                   class="transform -rotate-0 transition hover:scale-105 duration-700 ease-in-out hover:rotate-1"
-                  style="max-width: 1100px; max-height: 800px; margin-left:0px"
+                  style="max-width: 750px; max-height: 750px; margin-left:10rem"
               />
           </div>
         </div>
@@ -540,4 +587,19 @@
       once: false,
     })
   </script>
+  <script type="text/javascript" language="javascript">
+  function changePic1() {
+    document.getElementById("myImg").src = "../static/assets/img/ilham.png";
+  }
+  function changePic2() {
+    document.getElementById("myImg").src = "../static/assets/img/ilham3.png";
+  }
+  function changePic3() {
+    document.getElementById("myImg2").src = "../static/assets/img/ilham.png";
+  }
+  function changePic4() {
+    document.getElementById("myImg2").src = "../static/assets/img/ilham3.png";
+  }
+</script>
+<script src="https://scripts.sirv.com/sirvjs/v3/sirv.js"></script>
 </html>
