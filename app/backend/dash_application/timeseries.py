@@ -50,22 +50,20 @@ timeseries = html.Div(
                 html.Div(
                     [
                         html.H6(
-                            """Tempat Pelanggaran""",
+                            """Kategori Pelanggaran 2""",
                             style={"margin-right": "2em"},
                         ),
                         dcc.Dropdown(
-                            id="crossfilter-tempat",
+                            id="crossfilter-kategori-2",
                             options=[
-                                {"label": y, "value": y}
-                                for y in df.sort_values("tempat_kejadian")[
-                                    "tempat_kejadian"
-                                ].unique()
+                                {"label": i, "value": i}
+                                for i in df.sort_values("kategori")["kategori"].unique()
                             ],
-                            multi=False,
-                            persistence="string",
-                            persistence_type="local",
-                            placeholder="Pilih tempat pelanggaran",
+                            clearable=True,
+                            className="form-dropdown",
+                            placeholder="Pilih kategori pelanggaran kedua",
                         ),
+                        
                     ],
                     style={"width": "49%", "display": "inline-block"},
                 ),
@@ -86,19 +84,23 @@ timeseries = html.Div(
                             placeholder="Pilih kategori pelanggaran pertama",
                         ),
                         html.H6(
-                            """Kategori Pelanggaran 2""",
+                            """Tempat Pelanggaran""",
                             style={"margin-right": "2em, font-weight : bolder"},
                         ),
                         dcc.Dropdown(
-                            id="crossfilter-kategori-2",
+                            id="crossfilter-tempat",
                             options=[
-                                {"label": i, "value": i}
-                                for i in df.sort_values("kategori")["kategori"].unique()
+                                {"label": y, "value": y}
+                                for y in df.sort_values("tempat_kejadian")[
+                                    "tempat_kejadian"
+                                ].unique()
                             ],
-                            clearable=True,
-                            className="form-dropdown",
-                            placeholder="Pilih kategori pelanggaran kedua",
+                            multi=False,
+                            persistence="string",
+                            persistence_type="local",
+                            placeholder="Pilih tempat pelanggaran",
                         ),
+                        
                     ],
                     style={
                         "width": "49%",
@@ -146,30 +148,30 @@ timeseries = html.Div(
                             id="seasonality"
                             # hoverData={"points": [{"customdata": "Laut Halmahera"}]},
                         ),
-                        dcc.Slider(
-                            id="PerTahun",
-                            min=2014,
-                            max=2019,
-                            value=2019,
-                            step=None,
-                            marks={
-                                2014: {
-                                    "label": "2014",
-                                    "style": {
-                                        "color": "#77b0b1",
-                                        "top-padding": "10px",
-                                    },
-                                },
-                                2015: {"label": "2015"},
-                                2016: {"label": "2016"},
-                                2017: {"label": "2017"},
-                                2018: {
-                                    "label": "2018",
-                                },
-                                2019: {"label": "2019", "style": {"color": "#f50"}},
-                                # str(year): str(year) for year in df["Tahun"].unique()
-                            },
-                        ),
+                        # dcc.Slider(
+                        #     id="PerTahun",
+                        #     min=2014,
+                        #     max=2019,
+                        #     value=2019,
+                        #     step=None,
+                        #     marks={
+                        #         2014: {
+                        #             "label": "2014",
+                        #             "style": {
+                        #                 "color": "#77b0b1",
+                        #                 "top-padding": "10px",
+                        #             },
+                        #         },
+                        #         2015: {"label": "2015"},
+                        #         2016: {"label": "2016"},
+                        #         2017: {"label": "2017"},
+                        #         2018: {
+                        #             "label": "2018",
+                        #         },
+                        #         2019: {"label": "2019", "style": {"color": "#f50"}},
+                        #         # str(year): str(year) for year in df["Tahun"].unique()
+                        #     },
+                        # ),
                     ],
                     style={
                         "width": "49%",
@@ -215,7 +217,7 @@ def build_graph(kategori, kategori2, tempatkejadian, year):
             "xanchor": "center",
         },
     )
-    print(dff)
+    # print(dff)
     return fig
 
 
