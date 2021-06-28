@@ -20,93 +20,55 @@ mapbox_access_token = os.environ.get("MAPBOX_ACCESS_KEY")
 
 # Load DataFrame
 df = create_dataframe()
-
-
-def process_pelanggaran_data(df):
-
-    # Columns renaming
-    df.columns = [col.lower() for col in df.columns]
-
-    # Saving countries positions (latitude and longitude per subzones)
-    posisi_kejadian = (
-        df[["latitude", "longitude"]]
-        .drop_duplicates(["tempat_kejadian"])
-        .set_index(["tempat_kejadian"])
-    )
-
-    # Pivoting per category
-    df = pd.pivot_table(
-        df, values="count", index=["tanggal", "tempat_kejadian"], columns=["kategori"]
-    )
-    df.columns = ["Imigran Ilegal", "Pembalakan Liar"]
-
-    # Merging locations after pivoting
-    df = df.join(posisi_kejadian)
-
-    # Filling nan values with 0
-    df = df.fillna(0)
-
-    # Compute bubble sizes
-    df["size"] = (
-        df["Imigran Ilegal"]
-        .apply(lambda x: (np.sqrt(x / 100) + 1) if x > 500 else (np.log(x) / 2 + 1))
-        .replace(np.NINF, 0)
-    )
-
-    # Compute bubble color
-    df["color"] = (df["recovered"] / df["confirmed"]).fillna(0).replace(np.inf, 0)
-
-    return df
-
-
-blackbold = {"color": "black", "font-weight": "bold"}
+candidates = df.sort_values("kategori")["kategori"].unique()
 
 mapbox = html.Div(
     [
-        # ---------------------------------------------------------------
-        # Map_legen + Borough_checklist + Recycling_type_checklist + Web_link + Map
-        html.Div(
-            [
-                html.Div(
-                    [
-                        # Web_link
-                        html.Br(),
-                        html.Label(["Website:"], style=blackbold),
-                        html.Pre(
-                            id="web_link",
-                            children=[],
-                            style={
-                                "white-space": "pre-wrap",
-                                "word-break": "break-all",
-                                "border": "1px solid black",
-                                "text-align": "center",
-                                "padding": "12px 12px 12px 12px",
-                                "color": "blue",
-                                "margin-top": "3px",
-                            },
-                        ),
-                    ],
-                    className="three columns",
-                ),
-                # Map
-                html.Div(
-                    [
-                        dcc.Graph(
-                            id="graph",
-                            config={"displayModeBar": False, "scrollZoom": True},
-                            style={
-                                "background": "#00FC87",
-                                "padding-bottom": "2px",
-                                "padding-left": "2px",
-                                "height": "100vh",
-                            },
-                        )
-                    ],
-                    className="nine columns",
-                ),
-            ],
-            className="row",
+        html.P("Candidate:"),
+        dcc.RadioItems(
+            id="candidate",
+            options=[{"value": x, "label": x} for x in candidates],
+            value=candidates[0],
+            labelStyle={"display": "inline-block", "margin-left": "1rem"},
         ),
-    ],
-    className="ten columns offset-by-one",
+        dcc.Graph(id="choropleth"),
+    ]
 )
+
+
+@dash_app3.callback(Output("choropleth", "figure"), [Input("candidate", "value")])
+def display_choropleth(candidate):
+    fig = px.density_mapbox(
+        df,
+        lat="longitude",
+        lon="latitude",
+        hover_name="kategori",
+        hover_data=["tanggal", "jam"],
+        zoom=10,
+        height=600,
+    )
+    fig.update_layout(
+        mapbox_style="white-bg",
+        mapbox_layers=[
+            {
+                "below": "traces",
+                "sourcetype": "raster",
+                "sourceattribution": "Sea Crime 2014 - 2019",
+                "source": [
+                    "https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}"
+                ],
+            },
+            {
+                "sourcetype": "raster",
+                "sourceattribution": "Indonesia Spatial Geographic Visualization by Kota 103",
+                "source": [
+                    "https://geo.weather.gc.ca/geomet/?"
+                    "SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&BBOX={bbox-epsg-3857}&CRS=EPSG:3857"
+                    "&WIDTH=1000&HEIGHT=1000&LAYERS=RADAR_1KM_RDBR&TILED=true&FORMAT=image/png"
+                ],
+            },
+        ],
+    )
+    fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
+
+    return fig
