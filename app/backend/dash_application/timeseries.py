@@ -63,7 +63,6 @@ timeseries = html.Div(
                             className="form-dropdown",
                             placeholder="Pilih kategori pelanggaran kedua",
                         ),
-                        
                     ],
                     style={"width": "49%", "display": "inline-block"},
                 ),
@@ -100,7 +99,6 @@ timeseries = html.Div(
                             persistence_type="local",
                             placeholder="Pilih tempat pelanggaran",
                         ),
-                        
                     ],
                     style={
                         "width": "49%",
