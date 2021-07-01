@@ -24,7 +24,7 @@ timeseries = html.Div(
         html.Div(
             [
                 dcc.RangeSlider(
-                    id="years",
+                    id="tahun",
                     min=2014,
                     max=2019,
                     dots=True,
@@ -39,7 +39,7 @@ timeseries = html.Div(
         html.Div(
             [
                 dcc.Dropdown(
-                    id="kategori",
+                    id="category",
                     multi=True,
                     value=[""],
                     placeholder="Select kategori",
@@ -97,13 +97,13 @@ timeseries = html.Div(
 
 @dash_app1.callback(
     Output("trend_analysis", "figure"),
-    [Input("kategori", "value"), Input("years", "value"), Input("lokasi", "value")],
+    [Input("category", "value"), Input("tahun", "value"), Input("lokasi", "value")],
 )
-def trend(kategori, years, lokasi):
+def trend(category, tahun, lokasi):
     trend_data = data_timeseries[
-        data_timeseries["kategori"].isin(kategori)
+        data_timeseries["kategori"].isin(category)
         & data_timeseries["tempat_kejadian"].isin(lokasi)
-        & data_timeseries["Tahun"].between(years[0], years[1])
+        & data_timeseries["Tahun"].between(tahun[0], tahun[1])
     ]
     decomposition = seasonal_decompose(
         trend_data["Frekuensi"], model="additive", period=12
@@ -121,7 +121,7 @@ def trend(kategori, years, lokasi):
     return {
         "data": [trace1],
         "layout": {
-            "title": "Trend Analysis " + ", ".join(kategori),
+            "title": "Trend Analysis " + ", ".join(category),
             "xaxis": {
                 "type": "date",
                 "title": "Time",
@@ -139,13 +139,13 @@ def trend(kategori, years, lokasi):
 
 @dash_app1.callback(
     Output("seaonality_analysis", "figure"),
-    [Input("kategori", "value"), Input("years", "value"), Input("lokasi", "value")],
+    [Input("category", "value"), Input("tahun", "value"), Input("lokasi", "value")],
 )
-def seasonality(kategori, years, lokasi):
+def seasonality(category, tahun, lokasi):
     season_data = data_timeseries[
-        data_timeseries["kategori"].isin(kategori)
+        data_timeseries["kategori"].isin(category)
         & data_timeseries["tempat_kejadian"].isin(lokasi)
-        & data_timeseries["Tahun"].between(years[0], years[1])
+        & data_timeseries["Tahun"].between(tahun[0], tahun[1])
     ]
     decomposition = seasonal_decompose(
         season_data["Frekuensi"], model="additive", period=12
@@ -163,7 +163,7 @@ def seasonality(kategori, years, lokasi):
     return {
         "data": [trace1],
         "layout": {
-            "title": "Seasonality Analysis " + ", ".join(kategori),
+            "title": "Seasonality Analysis " + ", ".join(category),
             "xaxis": {
                 "type": "date",
                 "title": "Time",
@@ -181,13 +181,13 @@ def seasonality(kategori, years, lokasi):
 
 @dash_app1.callback(
     Output("by_year_country_world", "figure"),
-    [Input("kategori", "value"), Input("years", "value"), Input("lokasi", "value")],
+    [Input("category", "value"), Input("tahun", "value"), Input("lokasi", "value")],
 )
-def annual_by_country_barchart(kategori, years, lokasi):
+def annual_by_country_barchart(category, tahun, lokasi):
     data_map = df[
-        df["kategori"].isin(kategori)
+        df["kategori"].isin(category)
         & df["tempat_kejadian"].isin(lokasi)
-        & df["Tahun"].between(years[0], years[1])
+        & df["Tahun"].between(tahun[0], tahun[1])
     ]
     data_map = data_map.groupby(["tanggal", "kategori"], as_index=False)[
         "Frekuensi"
@@ -200,13 +200,13 @@ def annual_by_country_barchart(kategori, years, lokasi):
                 y=data_map[data_map["kategori"] == c]["Frekuensi"],
                 name=c,
             )
-            for c in kategori
+            for c in category
         ],
         "layout": go.Layout(
             title="Observed Data "
-            + ", ".join(kategori)
+            + ", ".join(category)
             + "  "
-            + " - ".join([str(y) for y in years]),
+            + " - ".join([str(y) for y in tahun]),
             plot_bgcolor="#eeeeee",
             paper_bgcolor="#eeeeee",
             font={"family": "Roboto"},

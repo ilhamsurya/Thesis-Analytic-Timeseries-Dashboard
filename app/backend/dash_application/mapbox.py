@@ -6,7 +6,7 @@ import pandas as pd
 import numpy as np
 import dash  # (version 1.0.0)
 import dash_table
-from .data import create_dataframe
+from .data import create_dataframe_map
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
@@ -22,7 +22,7 @@ mapbox_access_token = os.environ.get("MAPBOX_ACCESS_KEY")
 
 
 # Load DataFrame
-df = create_dataframe()
+df = create_dataframe_map()
 candidates = [dict(label=t, value=t) for t in df["kategori"].unique()]
 
 
