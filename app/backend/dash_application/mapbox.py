@@ -30,6 +30,52 @@ mapbox = html.Div(
     [
         html.Div(
             [
+                html.H6(
+                    """Pilih Kategori Pelanggaran""",
+                    style={"margin-right": "2em"},
+                ),
+                dcc.Dropdown(
+                    id="kategori",
+                    multi=True,
+                    value=[""],
+                    placeholder="Select kategori",
+                    options=[
+                        {"label": c, "value": c}
+                        for c in sorted(df["kategori"].unique().astype(str))
+                    ],
+                ),
+            ],
+            style={"width": "49%", "display": "inline-block"},
+        ),
+        html.Div(
+            [
+                html.H6(
+                    """Pilih Tempat Kejadian Pelanggaran""",
+                    style={"margin-right": "2em"},
+                ),
+                dcc.Dropdown(
+                    id="tempat_kejadian",
+                    multi=True,
+                    value=[""],
+                    placeholder="Pilih Tempat Kejadian",
+                    options=[
+                        {"label": c, "value": c}
+                        for c in sorted(df["tempat_kejadian"].unique().astype(str))
+                    ],
+                ),
+            ],
+            style={
+                "width": "50%",
+                "float": "right",
+                "display": "inline-block",
+            },
+        ),
+        html.Div(
+            [
+                html.H6(
+                    """Geser Waktu Pelanggaran""",
+                    style={"margin-right": "2em"},
+                ),
                 dcc.RangeSlider(
                     id="years",
                     min=2014,
@@ -41,22 +87,11 @@ mapbox = html.Div(
                 html.Br(),
                 html.Br(),
             ],
-            style={"width": "75%", "margin-left": "12%", "background-color": "#eeeeee"},
-        ),
-        html.Div(
-            [
-                dcc.Dropdown(
-                    id="kategori",
-                    multi=True,
-                    value=[""],
-                    placeholder="Select kategori",
-                    options=[
-                        {"label": c, "value": c}
-                        for c in sorted(df["kategori"].unique().astype(str))
-                    ],
-                )
-            ],
-            style={"width": "50%", "margin-left": "25%", "background-color": "#eeeeee"},
+            style={
+                "width": "100%",
+                "padding": "80px 80px 80px 80px",
+                "color": "black",
+            },
         ),
         dcc.Graph(id="map_world", config={"displayModeBar": False}),
         # dcc.Graph(id="choropleth"),
@@ -174,11 +209,17 @@ def annual_by_country_barchart(kategori, years):
 
 @dash_app3.callback(
     Output("map_world", "figure"),
-    [Input("kategori", "value"), Input("years", "value")],
+    [
+        Input("kategori", "value"),
+        Input("years", "value"),
+        Input("tempat_kejadian", "value"),
+    ],
 )
-def countries_on_map(kategori, years):
+def countries_on_map(kategori, years, tempat_kejadian):
     data_map = df[
-        df["kategori"].isin(kategori) & df["Tahun"].between(years[0], years[1])
+        df["kategori"].isin(kategori)
+        & df["tempat_kejadian"].isin(tempat_kejadian)
+        & df["Tahun"].between(years[0], years[1])
     ]
     fig = go.Figure(
         data=[
@@ -307,13 +348,9 @@ def top_countries_count(years):
     data_kejadian = df_top_countries.sort_values(["count"]).tail(20)
     return {
         "data": [
-            go.Bar(
-                x=data_kejadian["count"],
-                y=data_kejadian.index,
-                orientation="h",
-                constraintext="none",
-                text=df_top_countries.sort_values(["count"]).tail(20).index,
-                textposition="outside",
+            go.Pie(
+                values=data_kejadian["count"],
+                labels=df_top_countries.sort_values(["count"]).tail(20).index,
             )
         ],
         "layout": go.Layout(
@@ -340,14 +377,9 @@ def top_countries_deaths(years):
 
     return {
         "data": [
-            go.Bar(
-                x=df_top_countries.sort_values(["count"]).tail(20)["count"],
-                y=df_top_countries.sort_values(["count"]).tail(20).index,
-                orientation="h",
-                constraintext="none",
-                showlegend=False,
-                text=df_top_countries.sort_values(["count"]).tail(20).index,
-                textposition="outside",
+            go.Pie(
+                values=df_top_countries.sort_values(["count"]).tail(20)["count"],
+                labels=df_top_countries.sort_values(["count"]).tail(20).index,
             )
         ],
         "layout": go.Layout(

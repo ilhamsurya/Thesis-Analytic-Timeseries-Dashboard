@@ -23,21 +23,10 @@ timeseries = html.Div(
     [
         html.Div(
             [
-                dcc.RangeSlider(
-                    id="tahun",
-                    min=2014,
-                    max=2019,
-                    dots=True,
-                    value=[2014, 2019],
-                    marks={str(yr): "'" + str(yr)[2:] for yr in range(2014, 2019)},
+                html.H6(
+                    """Pilih Kategori Pelanggaran""",
+                    style={"margin-right": "2em"},
                 ),
-                html.Br(),
-                html.Br(),
-            ],
-            style={"width": "75%", "margin-left": "12%", "background-color": "#eeeeee"},
-        ),
-        html.Div(
-            [
                 dcc.Dropdown(
                     id="category",
                     multi=True,
@@ -47,6 +36,15 @@ timeseries = html.Div(
                         {"label": c, "value": c}
                         for c in sorted(df["kategori"].unique().astype(str))
                     ],
+                ),
+            ],
+            style={"width": "49%", "display": "inline-block"},
+        ),
+        html.Div(
+            [
+                html.H6(
+                    """Pilih Lokasi Pelanggaran""",
+                    style={"margin-right": "2em"},
                 ),
                 dcc.Dropdown(
                     id="lokasi",
@@ -59,13 +57,40 @@ timeseries = html.Div(
                     ],
                 ),
             ],
-            style={"width": "50%", "margin-left": "25%", "background-color": "#eeeeee"},
+            style={
+                "width": "50%",
+                "float": "right",
+                "display": "inline-block",
+            },
+        ),
+        html.Div(
+            [
+                html.H6(
+                    """Geser Waktu Pelanggaran""",
+                    style={"margin-right": "2em"},
+                ),
+                dcc.RangeSlider(
+                    id="tahun",
+                    min=2014,
+                    max=2019,
+                    dots=True,
+                    value=[2014, 2019],
+                    marks={str(yr): "'" + str(yr)[2:] for yr in range(2014, 2019)},
+                ),
+                html.Br(),
+                html.Br(),
+            ],
+            style={
+                "width": "100%",
+                "padding": "80px 80px 80px 80px",
+                "color": "black",
+            },
         ),
         dcc.Graph(id="by_year_country_world", config={"displayModeBar": False}),
         html.Hr(),
         html.Br(),
         html.Content(
-            "Time Series Component", style={"margin-left": "25rem", "font-size": 25}
+            "Komponen Time Series", style={"margin-left": "25rem", "font-size": 25}
         ),
         html.Div(
             [
@@ -203,12 +228,12 @@ def annual_by_country_barchart(category, tahun, lokasi):
             for c in category
         ],
         "layout": go.Layout(
-            title="Observed Data "
+            title="Hasil Observasi Data "
             + ", ".join(category)
             + "  "
             + " - ".join([str(y) for y in tahun]),
-            plot_bgcolor="#eeeeee",
-            paper_bgcolor="#eeeeee",
+            # plot_bgcolor="#eeeeee",
+            # paper_bgcolor="#eeeeee",
             font={"family": "Roboto"},
             xaxis=dict(
                 rangeselector=dict(
