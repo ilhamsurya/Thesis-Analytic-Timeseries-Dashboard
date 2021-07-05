@@ -82,7 +82,7 @@ timeseries = html.Div(
             ],
             style={
                 "width": "100%",
-                "padding": "80px 80px 80px 80px",
+                "padding": "80px 80px 0px 80px",
                 "color": "black",
             },
         ),
@@ -92,6 +92,7 @@ timeseries = html.Div(
         html.Content(
             "Komponen Time Series", style={"margin-left": "25rem", "font-size": 25}
         ),
+        dcc.Graph(id="observed_data", config={"displayModeBar": False}),
         html.Div(
             [
                 html.Div(
@@ -121,6 +122,50 @@ timeseries = html.Div(
 
 
 @dash_app1.callback(
+    Output("observed_data", "figure"),
+    [Input("category", "value"), Input("tahun", "value"), Input("lokasi", "value")],
+)
+def observed(category, tahun, lokasi):
+    observed_data = data_timeseries[
+        data_timeseries["kategori"].isin(category)
+        & data_timeseries["tempat_kejadian"].isin(lokasi)
+        & data_timeseries["Tahun"].between(tahun[0], tahun[1])
+    ]
+    decomposition = seasonal_decompose(
+        observed_data["Frekuensi"],
+        model="additive",
+        period=int(len(observed_data) / 2),
+    )
+    observed = decomposition.observed
+    trace1 = {
+        "line": {"color": "rgb(34,139,34)", "width": 3},
+        "mode": "lines",
+        "name": "Observed",
+        "type": "scatter",
+        "x": observed_data.index,
+        "y": observed,
+    }
+
+    return {
+        "data": [trace1],
+        "layout": {
+            "title": "Observed Data " + ", ".join(category),
+            "xaxis": {
+                "type": "date",
+                "title": "Time",
+                "autorange": True,
+            },
+            "yaxis": {
+                "type": "linear",
+                "title": "Count",
+                "autorange": True,
+            },
+            "autosize": True,
+        },
+    }
+
+
+@dash_app1.callback(
     Output("trend_analysis", "figure"),
     [Input("category", "value"), Input("tahun", "value"), Input("lokasi", "value")],
 )
@@ -131,7 +176,9 @@ def trend(category, tahun, lokasi):
         & data_timeseries["Tahun"].between(tahun[0], tahun[1])
     ]
     decomposition = seasonal_decompose(
-        trend_data["Frekuensi"], model="additive", period=12
+        trend_data["Frekuensi"],
+        model="additive",
+        period=int(len(trend_data) / 2),
     )
     trend = decomposition.trend
     trace1 = {
@@ -146,7 +193,7 @@ def trend(category, tahun, lokasi):
     return {
         "data": [trace1],
         "layout": {
-            "title": "Trend Analysis " + ", ".join(category),
+            "title": "Trend Decomposition " + ", ".join(category),
             "xaxis": {
                 "type": "date",
                 "title": "Time",
@@ -154,7 +201,7 @@ def trend(category, tahun, lokasi):
             },
             "yaxis": {
                 "type": "linear",
-                "title": "Jumlah Kasus",
+                "title": "Count",
                 "autorange": True,
             },
             "autosize": True,
@@ -173,7 +220,9 @@ def seasonality(category, tahun, lokasi):
         & data_timeseries["Tahun"].between(tahun[0], tahun[1])
     ]
     decomposition = seasonal_decompose(
-        season_data["Frekuensi"], model="additive", period=12
+        season_data["Frekuensi"],
+        model="additive",
+        period=int(len(season_data) / 2),
     )
     seasonality = decomposition.seasonal
     trace1 = {
@@ -188,7 +237,7 @@ def seasonality(category, tahun, lokasi):
     return {
         "data": [trace1],
         "layout": {
-            "title": "Seasonality Analysis " + ", ".join(category),
+            "title": "Seasonality Decomposition " + ", ".join(category),
             "xaxis": {
                 "type": "date",
                 "title": "Time",
@@ -196,7 +245,7 @@ def seasonality(category, tahun, lokasi):
             },
             "yaxis": {
                 "type": "linear",
-                "title": "Jumlah Kasus",
+                "title": "Count",
                 "autorange": True,
             },
             "autosize": True,
@@ -228,7 +277,7 @@ def annual_by_country_barchart(category, tahun, lokasi):
             for c in category
         ],
         "layout": go.Layout(
-            title="Hasil Observasi Data "
+            title="Data Pelanggaran "
             + ", ".join(category)
             + "  "
             + " - ".join([str(y) for y in tahun]),

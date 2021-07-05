@@ -248,11 +248,17 @@ def countries_on_map(kategori, years, tempat_kejadian):
                     for d in data_map[data_map["kategori"] == c]["tanggal"]
                 ]
                 + "<br>"
-                + "Ditangkap Di:"
+                + "Waktu Pelanggaran:"
+                + data_map[data_map["kategori"] == c]["jam"].astype(str)
+                + "<br>"
+                + "Lokasi:"
                 + data_map[data_map["kategori"] == c]["tempat_kejadian"].astype(str)
                 + "<br>"
                 + "Nama Kapal:"
                 + data_map[data_map["kategori"] == c]["nama kapal"].astype(str)
+                + "<br>"
+                + "Kapten Kapal:"
+                + data_map[data_map["kategori"] == c]["kapten kapal"].astype(str)
                 + "<br>"
                 + "Asal Negara: "
                 + data_map[data_map["kategori"] == c]["bendera kapal"].astype(str)
@@ -263,6 +269,7 @@ def countries_on_map(kategori, years, tempat_kejadian):
                 + "Kapal Penangkap: "
                 + data_map[data_map["kategori"] == c]["kapal penangkap"].astype(str)
                 + "<br><br>"
+                + "Klasifikasi Berita: "
                 + [
                     "<br>".join(textwrap.wrap(x, 40))
                     if not isinstance(x, float)
