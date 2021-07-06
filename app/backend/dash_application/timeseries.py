@@ -3,9 +3,12 @@ from dash.dependencies import Output, Input, State
 import numpy as np
 import pandas as pd
 import dash
+import plotly.graph_objs as go
 import dash_html_components as html
 import dash_core_components as dcc
-from .data import create_dataframe
+from statsmodels.tsa.seasonal import seasonal_decompose
+from plotly.missing_ipywidgets import FigureWidget
+from .data import create_dataframe, create_dataframe_time_series
 from .layout import timeseries_layout
 from app import dash_app1
 import plotly.express as px
@@ -13,293 +16,292 @@ import plotly.express as px
 
 # Data untuk grafik perbandingan kategori semua tahun
 df = create_dataframe()
-# tempat_kejadian = df['tempat_kejadian']
-# df['tanggal'] = pd.to_datetime(df['tanggal'])
-# df = df.groupby(['Tahun','kategori','tempat_kejadian'], as_index=False)['ID'].count()
 
-df = df.groupby(["Tahun", "kategori", "tempat_kejadian","Bulan"], as_index=False)[
-    "Frekuensi"
-].count()
-# df = df.set_index('tanggal')
-# df = df.loc['2014-01-01':'2019-12-30']
-# df = df.groupby([pd.Grouper(freq="M"), 'kategori'])['ID'].count().reset_index()
+data_timeseries = create_dataframe_time_series()
 
-# Data untuk grafik seasonal per tahun
-# dt = df.groupby([pd.Grouper(freq="M"), 'Tahun'])['ID'].count().reset_index()
-
-
-# dt = create_dataframe()
-# tempat_kejadian = dt['tempat_kejadian']
-# dt['tanggal'] = pd.to_datetime(df['tanggal'])
-# dt = dt.groupby(['tanggal','kategori'], as_index=False)['ID'].count()
-# dt = dt.set_index('tanggal')
-# dt = dt.loc['2014-01-01':'2019-12-30']
-# dt = dt.groupby([pd.Grouper(freq="M"), 'kategori'])['ID'].count().reset_index()
-
-
-def show():
-    return render_template("kategori.html", kategori=df)
-
-
-print(df)
-# Create Layout
 timeseries = html.Div(
     [
         html.Div(
             [
-                html.Div(
-                    [
-                        html.H6(
-                            """Kategori Pelanggaran 2""",
-                            style={"margin-right": "2em"},
-                        ),
-                        dcc.Dropdown(
-                            id="crossfilter-kategori-2",
-                            options=[
-                                {"label": i, "value": i}
-                                for i in df.sort_values("kategori")["kategori"].unique()
-                            ],
-                            clearable=True,
-                            className="form-dropdown",
-                            placeholder="Pilih kategori pelanggaran kedua",
-                        ),
-                        
-                    ],
-                    style={"width": "49%", "display": "inline-block"},
+                html.H6(
+                    """Pilih Kategori Pelanggaran""",
+                    style={"margin-right": "2em"},
                 ),
-                html.Div(
-                    [
-                        html.H6(
-                            """Kategori Pelanggaran 1""",
-                            style={"margin-right": "2em, font-weight : bold"},
-                        ),
-                        dcc.Dropdown(
-                            id="crossfilter-kategori",
-                            options=[
-                                {"label": i, "value": i}
-                                for i in df.sort_values("kategori")["kategori"].unique()
-                            ],
-                            clearable=True,
-                            className="form-dropdown",
-                            placeholder="Pilih kategori pelanggaran pertama",
-                        ),
-                        html.H6(
-                            """Tempat Pelanggaran""",
-                            style={"margin-right": "2em, font-weight : bolder"},
-                        ),
-                        dcc.Dropdown(
-                            id="crossfilter-tempat",
-                            options=[
-                                {"label": y, "value": y}
-                                for y in df.sort_values("tempat_kejadian")[
-                                    "tempat_kejadian"
-                                ].unique()
-                            ],
-                            multi=False,
-                            persistence="string",
-                            persistence_type="local",
-                            placeholder="Pilih tempat pelanggaran",
-                        ),
-                        
+                dcc.Dropdown(
+                    id="category",
+                    multi=True,
+                    value=[""],
+                    placeholder="Select kategori",
+                    options=[
+                        {"label": c, "value": c}
+                        for c in sorted(df["kategori"].unique().astype(str))
                     ],
-                    style={
-                        "width": "49%",
-                        "float": "left",
-                        # "display": "inline-block",
-                    },
                 ),
-                html.Div(
-                    [
-                        html.H6(
-                            """Geser Waktu Pelanggaran""",
-                            style={"margin-right": "2em"},
-                        ),
-                        dcc.RangeSlider(
-                            id="select_year",
-                            min=2014,
-                            max=2019,
-                            dots=True,
-                            value=[2015, 2019],
-                            marks={str(yr): str(yr) for yr in range(2014, 2019)},
-                        ),
-                    ],
-                    style={
-                        "width": "100%",
-                        "padding": "80px 80px 80px 80px",
-                        "color": "black",
-                    },
+            ],
+            style={"width": "49%", "display": "inline-block"},
+        ),
+        html.Div(
+            [
+                html.H6(
+                    """Pilih Lokasi Pelanggaran""",
+                    style={"margin-right": "2em"},
                 ),
-                html.Div(
-                    [
-                        dcc.Graph(
-                            id="crossfilter-indicator-scatter"
-                            # hoverData={"points": [{"customdata": "Laut Halmahera"}]},
-                        ),
+                dcc.Dropdown(
+                    id="lokasi",
+                    multi=True,
+                    value=[""],
+                    placeholder="Select lokasi",
+                    options=[
+                        {"label": c, "value": c}
+                        for c in sorted(df["tempat_kejadian"].unique().astype(str))
                     ],
-                    style={
-                        "width": "49%",
-                        "display": "inline-block",
-                        "padding": "0 20",
-                    },
-                ),
-                html.Div(
-                    [
-                        dcc.Graph(
-                            id="seasonality"
-                        ),
-                    ],
-                    style={
-                        "width": "49%",
-                        "display": "inline-block",
-                        "padding": "0 20",
-                    },
                 ),
             ],
             style={
-                "borderBottom": "thin lightgrey solid",
-                "backgroundColor": "rgb(250, 250, 250)",
-                "padding": "10px 5px",
+                "width": "50%",
+                "float": "right",
+                "display": "inline-block",
             },
+        ),
+        html.Div(
+            [
+                html.H6(
+                    """Geser Waktu Pelanggaran""",
+                    style={"margin-right": "2em"},
+                ),
+                dcc.RangeSlider(
+                    id="tahun",
+                    min=2014,
+                    max=2019,
+                    dots=True,
+                    value=[2014, 2019],
+                    marks={str(yr): "'" + str(yr)[2:] for yr in range(2014, 2019)},
+                ),
+                html.Br(),
+                html.Br(),
+            ],
+            style={
+                "width": "100%",
+                "padding": "80px 80px 0px 80px",
+                "color": "black",
+            },
+        ),
+        dcc.Graph(id="by_year_country_world", config={"displayModeBar": False}),
+        html.Hr(),
+        html.Br(),
+        html.Content(
+            "Komponen Time Series", style={"margin-left": "25rem", "font-size": 25}
+        ),
+        dcc.Graph(id="observed_data", config={"displayModeBar": False}),
+        html.Div(
+            [
+                html.Div(
+                    [
+                        dcc.Graph(
+                            id="trend_analysis",
+                            figure={"layout": {"margin": {"r": 10, "t": 50}}},
+                            config={"displayModeBar": False},
+                        ),
+                    ],
+                    style={"width": "48%", "display": "inline-block"},
+                ),
+                html.Div(
+                    [
+                        dcc.Graph(
+                            id="seaonality_analysis",
+                            config={"displayModeBar": False},
+                            figure={"layout": {"margin": {"l": 10, "t": 50}}},
+                        ),
+                    ],
+                    style={"width": "48%", "display": "inline-block", "float": "right"},
+                ),
+            ]
         ),
     ]
 )
 
 
 @dash_app1.callback(
-    Output("crossfilter-indicator-scatter", "figure"),
-    [
-        Input("crossfilter-kategori", "value"),
-        Input("crossfilter-kategori-2", "value"),
-        Input("crossfilter-tempat", "value"),
-        Input("select_year", "value"),
-    ],
+    Output("observed_data", "figure"),
+    [Input("category", "value"), Input("tahun", "value"), Input("lokasi", "value")],
 )
-def build_graph(kategori, kategori2, tempatkejadian, year):
-    # dff = df.groupby()
-    dff = df[
-        ((df["kategori"] == kategori) | (df["kategori"] == kategori2))
-        & ((df["tempat_kejadian"] == tempatkejadian))
-        & ((df["Tahun"] >= year[0]) & (df["Tahun"] <= year[1]))
+def observed(category, tahun, lokasi):
+    observed_data = data_timeseries[
+        data_timeseries["kategori"].isin(category)
+        & data_timeseries["tempat_kejadian"].isin(lokasi)
+        & data_timeseries["Tahun"].between(tahun[0], tahun[1])
     ]
-    fig = px.line(dff, x="Tahun", y="Frekuensi", color="kategori")
-    fig.update_layout(
-        yaxis={"title": "Frekuensi"},
-        xaxis={"title": "Waktu"},
-        title={
-            "text": "Grafik Perbandingan Trend",
-            "font": {"size": 28},
-            "x": 0.5,
-            "xanchor": "center",
-        },
+    decomposition = seasonal_decompose(
+        observed_data["Frekuensi"],
+        model="additive",
+        period=int(len(observed_data) / 2),
     )
-    return fig
+    observed = decomposition.observed
+    trace1 = {
+        "line": {"color": "rgb(34,139,34)", "width": 3},
+        "mode": "lines",
+        "name": "Observed",
+        "type": "scatter",
+        "x": observed_data.index,
+        "y": observed,
+    }
+
+    return {
+        "data": [trace1],
+        "layout": {
+            "title": "Observed Data " + ", ".join(category),
+            "xaxis": {
+                "type": "date",
+                "title": "Time",
+                "autorange": True,
+            },
+            "yaxis": {
+                "type": "linear",
+                "title": "Count",
+                "autorange": True,
+            },
+            "autosize": True,
+        },
+    }
 
 
 @dash_app1.callback(
-    Output("seasonality", "figure"),
-    [Input("crossfilter-kategori", "value"), 
-    Input("crossfilter-kategori-2", "value")],
+    Output("trend_analysis", "figure"),
+    [Input("category", "value"), Input("tahun", "value"), Input("lokasi", "value")],
 )
-
-def build_graph2(kategori, kategori2):
-    dff = df[(df["kategori"] == kategori) | (df["kategori"] == kategori2)]
-    fig2 = px.line(dff, x="Tahun", y="ID", color="kategori")
-    fig2.update_layout(
-        yaxis={"title": "Frekuensi"},
-        xaxis={"title": "Waktu"},
-        title={
-            "text": "Grafik Seasonal Perbandingan Trend",
-            "font": {"size": 28},
-            "x": 0.5,
-            "xanchor": "center",
-        },
+def trend(category, tahun, lokasi):
+    trend_data = data_timeseries[
+        data_timeseries["kategori"].isin(category)
+        & data_timeseries["tempat_kejadian"].isin(lokasi)
+        & data_timeseries["Tahun"].between(tahun[0], tahun[1])
+    ]
+    decomposition = seasonal_decompose(
+        trend_data["Frekuensi"],
+        model="additive",
+        period=int(len(trend_data) / 2),
     )
-    return fig2
+    trend = decomposition.trend
+    trace1 = {
+        "line": {"color": "rgb(178,34,34)", "width": 3},
+        "mode": "lines",
+        "name": "Observed",
+        "type": "scatter",
+        "x": trend_data.index,
+        "y": trend,
+    }
+
+    return {
+        "data": [trace1],
+        "layout": {
+            "title": "Trend Decomposition " + ", ".join(category),
+            "xaxis": {
+                "type": "date",
+                "title": "Time",
+                "autorange": True,
+            },
+            "yaxis": {
+                "type": "linear",
+                "title": "Count",
+                "autorange": True,
+            },
+            "autosize": True,
+        },
+    }
 
 
-# # @dash_app1.callback(
-# #     dash.dependencies.Output("crossfilter-indicator-scatter", "figure"),
-# #     [
-# #         dash.dependencies.Input("crossfilter-kategori", "value"),
-# #         dash.dependencies.Input("crossfilter-kategori-2", "value"),
-# #         # dash.dependencies.Input("crossfilter-tempat", "value"),
-# #         dash.dependencies.Input("crossfilter-year--slider", "value"),
-# #     ],
-# # )
-# # def update_graph(xaxis_column_name, yaxis_column_name, year_value):
-# #     dff = df[df["Tahun"] == year_value]
-# #     fig = px.line(
-# #         x=dff[dff["kategori"] == xaxis_column_name],
-# #         y=dff[dff["kategori"] == yaxis_column_name],
-# #         # hover_name=dff[dff["kategori"] == yaxis_column_name]["tempat_kejadian"],
-# #     )
+@dash_app1.callback(
+    Output("seaonality_analysis", "figure"),
+    [Input("category", "value"), Input("tahun", "value"), Input("lokasi", "value")],
+)
+def seasonality(category, tahun, lokasi):
+    season_data = data_timeseries[
+        data_timeseries["kategori"].isin(category)
+        & data_timeseries["tempat_kejadian"].isin(lokasi)
+        & data_timeseries["Tahun"].between(tahun[0], tahun[1])
+    ]
+    decomposition = seasonal_decompose(
+        season_data["Frekuensi"],
+        model="additive",
+        period=int(len(season_data) / 2),
+    )
+    seasonality = decomposition.seasonal
+    trace1 = {
+        "line": {"color": "rgb(255,140,0)", "width": 3},
+        "mode": "lines",
+        "name": "Observed",
+        "type": "scatter",
+        "x": season_data.index,
+        "y": seasonality,
+    }
 
-# #     fig.update_traces(
-# #         customdata=dff[dff["kategori"] == yaxis_column_name]["tempat_kejadian"]
-# #     )
-
-# #     fig.update_xaxes(title=xaxis_column_name, type="linear")
-
-# #     fig.update_yaxes(title=yaxis_column_name, type="linear")
-
-# #     fig.update_layout(margin={"l": 40, "b": 40, "t": 10, "r": 0}, hovermode="closest")
-
-# #     return fig
-
-
-# # def create_time_series(dff, title):
-
-# #     fig = px.line(dff, x="Tahun", y="kategori", labels={
-# #                      "kategori": "Frekuensi",
-# #                  })
-
-# #     fig.update_traces(mode="lines+markers")
-
-# #     fig.update_xaxes(showgrid=False)
-
-# #     fig.update_yaxes(type="linear")
-
-# #     fig.add_annotation(
-# #         x=0,
-# #         y=0.85,
-# #         xanchor="left",
-# #         yanchor="bottom",
-# #         xref="paper",
-# #         yref="paper",
-# #         showarrow=False,
-# #         align="left",
-# #         bgcolor="rgba(255, 255, 255, 0.5)",
-# #         text=title,
-# #     )
-
-# #     fig.update_layout(height=225, margin={"l": 20, "b": 30, "r": 10, "t": 10})
-
-# #     return fig
+    return {
+        "data": [trace1],
+        "layout": {
+            "title": "Seasonality Decomposition " + ", ".join(category),
+            "xaxis": {
+                "type": "date",
+                "title": "Time",
+                "autorange": True,
+            },
+            "yaxis": {
+                "type": "linear",
+                "title": "Count",
+                "autorange": True,
+            },
+            "autosize": True,
+        },
+    }
 
 
-# # @dash_app1.callback(
-# #     dash.dependencies.Output("x-time-series", "figure"),
-# #     [
-# #         dash.dependencies.Input("crossfilter-indicator-scatter", "hoverData"),
-# #         dash.dependencies.Input("crossfilter-kategori", "value"),
-# #     ],
-# # )
-# # def update_y_timeseries(hoverData, xaxis_column_name):
-# #     nama_tempat = hoverData["points"][0]["customdata"]
-# #     dff = df[df["tempat_kejadian"] == nama_tempat]
-# #     dff = dff[dff["kategori"] == xaxis_column_name]
-# #     title = "<b>{}</b><br>{}".format(nama_tempat, xaxis_column_name)
-# #     return create_time_series(dff, title)
+@dash_app1.callback(
+    Output("by_year_country_world", "figure"),
+    [Input("category", "value"), Input("tahun", "value"), Input("lokasi", "value")],
+)
+def annual_by_country_barchart(category, tahun, lokasi):
+    data_map = df[
+        df["kategori"].isin(category)
+        & df["tempat_kejadian"].isin(lokasi)
+        & df["Tahun"].between(tahun[0], tahun[1])
+    ]
+    data_map = data_map.groupby(["tanggal", "kategori"], as_index=False)[
+        "Frekuensi"
+    ].count()
 
-
-# # @dash_app1.callback(
-# #     dash.dependencies.Output("y-time-series", "figure"),
-# #     [
-# #         dash.dependencies.Input("crossfilter-indicator-scatter", "hoverData"),
-# #         dash.dependencies.Input("crossfilter-kategori-2", "value"),
-# #     ],
-# # )
-# # def update_x_timeseries(hoverData, yaxis_column_name):
-# #     dff = df[df["tempat_kejadian"] == hoverData["points"][0]["customdata"]]
-# #     dff = dff[dff["kategori"] == yaxis_column_name]
-# #     return create_time_series(dff, yaxis_column_name)
+    return {
+        "data": [
+            go.Scatter(
+                x=data_map[data_map["kategori"] == c]["tanggal"],
+                y=data_map[data_map["kategori"] == c]["Frekuensi"],
+                name=c,
+            )
+            for c in category
+        ],
+        "layout": go.Layout(
+            title="Data Pelanggaran "
+            + ", ".join(category)
+            + "  "
+            + " - ".join([str(y) for y in tahun]),
+            # plot_bgcolor="#eeeeee",
+            # paper_bgcolor="#eeeeee",
+            font={"family": "Roboto"},
+            xaxis=dict(
+                rangeselector=dict(
+                    buttons=list(
+                        [
+                            dict(
+                                count=1, label="1m", step="month", stepmode="backward"
+                            ),
+                            dict(
+                                count=6, label="6m", step="month", stepmode="backward"
+                            ),
+                            dict(count=1, label="YTD", step="year", stepmode="todate"),
+                            dict(count=1, label="1y", step="year", stepmode="backward"),
+                            dict(step="all"),
+                        ]
+                    )
+                ),
+                rangeslider=dict(visible=True),
+                type="date",
+            ),
+        ),
+    }

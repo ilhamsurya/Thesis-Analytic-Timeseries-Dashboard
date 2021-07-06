@@ -88,6 +88,7 @@ timeseries_layout = """
           Map Pelanggaran
         </a>
       </nav>
+      
       <a
         href="#"
         class="absolute w-full upgrade-btn bottom-0 active-nav-link text-white flex items-center justify-center py-4"

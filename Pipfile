@@ -20,6 +20,10 @@ flask-mysqldb = "*"
 werkzeug = "*"
 geojson = "*"
 python-dotenv = "*"
+dash-bootstrap-components = "*"
+statsmodels = "*"
+scikit-learn = "*"
+matplotlib = "*"
 
 [pipenv]
 allow_prereleases = true

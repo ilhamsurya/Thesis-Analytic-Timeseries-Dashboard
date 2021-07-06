@@ -22,14 +22,15 @@ from statsmodels.tsa.arima.model import ARIMA
 import pandas as pd
 
 
-#kebutuhan ARIMA
-# from statsmodels.tsa.stattools import adfuller
-# from statsmodels.tsa.stattools import acf, pacf
-# from statsmodels.tsa.seasonal import seasonal_decompose
-# from statsmodels.tsa.arima_model import ARIMA
-# from matplotlib.pylab import rcParams
-# rcParams['figure.figsize'] = 10, 6
-# from sklearn.metrics import mean_squared_error
+# kebutuhan ARIMA
+from statsmodels.tsa.stattools import adfuller
+from statsmodels.tsa.stattools import acf, pacf
+from statsmodels.tsa.seasonal import seasonal_decompose
+from statsmodels.tsa.arima_model import ARIMA
+from matplotlib.pylab import rcParams
+
+rcParams["figure.figsize"] = 10, 6
+from sklearn.metrics import mean_squared_error
 
 df = pd.read_csv("dataset/Piracy.csv", encoding='unicode_escape')
 #proses counting
@@ -156,14 +157,13 @@ forecasting = html.Div(
                             className="form-dropdown",
                             placeholder="Pilih kategori pelanggaran kedua",
                         ),
-                        
                     ],
-                    style={"width": "49%", "padding-bottom":"50px"},
+                    style={"width": "49%", "padding-bottom": "50px"},
                 ),
                 html.Div(
                     [
                         html.H6(
-                            """Grafik PForecasting""",
+                            """Grafik Forecasting""",
                             style={"margin-right": "8em"},
                         ),
                         dcc.Graph(
@@ -177,22 +177,22 @@ forecasting = html.Div(
                         "padding": "0 80",
                     },
                 ),
-                dbc.Card(
-                dbc.CardBody(
-                    [
-                    html.H4("Title", className="card-title"),
-                    html.H6("Card subtitle", className="card-subtitle"),
-                    html.P(
-                        "Some quick example text to build on the card title and make "
-                        "up the bulk of the card's content.",
-                            className="card-text",
-                        ),
-                        dbc.CardLink("Card link", href="#"),
-                        dbc.CardLink("External link", href="https://google.com"),
-                    ]
-                ),
-                style={"width": "18rem"},
-                )
+                # dbc.Card(
+                #     dbc.CardBody(
+                #         [
+                #             html.H4("Title", className="card-title"),
+                #             html.H6("Card subtitle", className="card-subtitle"),
+                #             html.P(
+                #                 "Some quick example text to build on the card title and make "
+                #                 "up the bulk of the card's content.",
+                #                 className="card-text",
+                #             ),
+                #             dbc.CardLink("Card link", href="#"),
+                #             dbc.CardLink("External link", href="https://google.com"),
+                #         ]
+                #     ),
+                #     style={"width": "18rem"},
+                # ),
             ],
             style={
                 "borderBottom": "thin lightgrey solid",
@@ -202,7 +202,6 @@ forecasting = html.Div(
         ),
     ]
 )
-
 
 
 @dash_app2.callback(
