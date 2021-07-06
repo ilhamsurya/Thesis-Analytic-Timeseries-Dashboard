@@ -17,7 +17,7 @@ df = create_dataframe()
 # df['tanggal'] = pd.to_datetime(df['tanggal'])
 # df = df.groupby(['Tahun','kategori','tempat_kejadian'], as_index=False)['ID'].count()
 
-df = df.groupby(["Tahun", "kategori", "tempat_kejadian"], as_index=False)[
+df = df.groupby(["Tahun", "kategori", "tempat_kejadian","Bulan"], as_index=False)[
     "Frekuensi"
 ].count()
 # df = df.set_index('tanggal')
@@ -146,32 +146,7 @@ timeseries = html.Div(
                     [
                         dcc.Graph(
                             id="seasonality"
-                            # hoverData={"points": [{"customdata": "Laut Halmahera"}]},
                         ),
-                        # dcc.Slider(
-                        #     id="PerTahun",
-                        #     min=2014,
-                        #     max=2019,
-                        #     value=2019,
-                        #     step=None,
-                        #     marks={
-                        #         2014: {
-                        #             "label": "2014",
-                        #             "style": {
-                        #                 "color": "#77b0b1",
-                        #                 "top-padding": "10px",
-                        #             },
-                        #         },
-                        #         2015: {"label": "2015"},
-                        #         2016: {"label": "2016"},
-                        #         2017: {"label": "2017"},
-                        #         2018: {
-                        #             "label": "2018",
-                        #         },
-                        #         2019: {"label": "2019", "style": {"color": "#f50"}},
-                        #         # str(year): str(year) for year in df["Tahun"].unique()
-                        #     },
-                        # ),
                     ],
                     style={
                         "width": "49%",
@@ -217,15 +192,15 @@ def build_graph(kategori, kategori2, tempatkejadian, year):
             "xanchor": "center",
         },
     )
-    # print(dff)
     return fig
 
 
 @dash_app1.callback(
     Output("seasonality", "figure"),
-    [Input("crossfilter-kategori", "value"), Input("crossfilter-kategori-2", "value")],
+    [Input("crossfilter-kategori", "value"), 
+    Input("crossfilter-kategori-2", "value")],
 )
-# df['kategori'] == kategori) |
+
 def build_graph2(kategori, kategori2):
     dff = df[(df["kategori"] == kategori) | (df["kategori"] == kategori2)]
     fig2 = px.line(dff, x="Tahun", y="ID", color="kategori")
