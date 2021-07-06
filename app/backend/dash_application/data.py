@@ -21,14 +21,14 @@ def create_dataframe():
     return df
 
 
-# def create_dataframe_map():
-#     """Create Pandas DataFrame from local CSV."""
-#     dff = pd.read_csv("dataset/gabungan.csv", parse_dates=["tanggal"])
-#     dff["Tahun"] = dff["tanggal"].dt.year
-#     dff["Bulan"] = dff["tanggal"].dt.month
-#     dff["Hari"] = dff["tanggal"].dt.day
-#     # df["tanggal"] = df["tanggal"].dt.date
-#     # num_complaints = df["kategori"].value_counts()
-#     # to_remove = num_complaints[num_complaints <= 30].index
-#     # df.replace(to_remove, np.nan, inplace=True)
-#     return dff
+def create_dataframe_map():
+    """Create Pandas DataFrame from local CSV."""
+    dff = pd.read_csv("dataset/gabungan.csv", parse_dates=["tanggal"])
+    dff["Tahun"] = dff["tanggal"].dt.year
+    dff["Bulan"] = dff["tanggal"].dt.month
+    dff["Hari"] = dff["tanggal"].dt.day
+    # df["tanggal"] = df["tanggal"].dt.date
+    # num_complaints = df["kategori"].value_counts()
+    # to_remove = num_complaints[num_complaints <= 30].index
+    # df.replace(to_remove, np.nan, inplace=True)
+    return dff
