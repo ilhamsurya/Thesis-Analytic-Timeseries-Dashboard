@@ -1,4 +1,5 @@
 import dash
+import plotly.graph_objects as go
 import dash_html_components as html
 import dash_html_components as html
 import dash_core_components as dcc
@@ -12,7 +13,6 @@ from statsmodels.tsa.statespace.sarimax import SARIMAX
 import matplotlib.pylab as plt
 from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
 from statsmodels.tsa.arima_model import ARMA
-from statsmodels.tsa.statespace.sarimax import SARIMAX
 from statsmodels.tsa.stattools import adfuller
 # import pmdarima as pm
 from numpy import cumsum
@@ -35,14 +35,7 @@ from sklearn.metrics import mean_squared_error
 df = pd.read_csv("dataset/Piracy.csv", encoding='unicode_escape')
 #proses counting
 jml = df.groupby(["kategori","Tahun","Bulan"], as_index=False)["Frekuensi"].count()
-# jml.head()
-waktu=[]
-#proses penambahan variabel series
-for i in range(len(jml["Frekuensi"])):
-    waktu.append(i+1) 
-jml['series'] = waktu
 #proses ploting
-jml.head()
 # Load DataFrame
 # df = create_dataframe()
 #manual differencing'
@@ -211,6 +204,13 @@ forecasting = html.Div(
     ],
 )
 def build_graph(kategori):
+    
+    # jml.head()
+    waktu=[]
+    #proses penambahan variabel series
+    for i in range(len(jml["Frekuensi"])):
+        waktu.append(i+1) 
+    jml['series'] = waktu
     # dff = df.groupby()
     #identifikasi
     hasil = Stasionarity_test(jml["Frekuensi"])
@@ -234,15 +234,23 @@ def build_graph(kategori):
         ramal = hasil.get_forecast(steps=5)
         ramal_akhir = ramal.predicted_mean
 
-    
-    dff = df[((df["kategori"] == "piracy"))]
-    print(dff)
-    fig = px.line(dff, x="series", y="Frekuensi", color="series")
+    # Create traces
+
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=jml["series"], y=jml["Frekuensi"],
+                        mode='lines',
+                        name='Training'))
+    fig.add_trace(go.Scatter(x=jml['series'].iloc[-10:], y=forecast.values,
+                        mode='lines',
+                        name='Testing'))
+    fig.add_trace(go.Scatter(x=ramal_akhir.index, y=ramal_akhir,
+                        mode='lines', name='Forecasting'))
+
     fig.update_layout(
         yaxis={"title": "Frekuensi"},
         xaxis={"title": "Bulan"},
         title={
-            "text": "Grafik Perbandingan Trend",
+            "text": "Grafik Forecast",
             "font": {"size": 28},
             "x": 0.5,
             "xanchor": "center",
