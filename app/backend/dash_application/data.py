@@ -19,7 +19,18 @@ def create_dataframe():
     # to_remove = num_complaints[num_complaints <= 30].index
     # df.replace(to_remove, np.nan, inplace=True)
     return df
-
+    
+def create_dataframe_time_series():
+    """Create Pandas DataFrame from local CSV."""
+    dataset = pd.read_csv("dataset/gabungan.csv")
+    dataset["tanggal"] = pd.to_datetime(dataset["tanggal"])
+    dataset.set_index("tanggal", inplace=True)
+    dataset.sort_index(inplace=True)
+    # df["tanggal"] = df["tanggal"].dt.date
+    # num_complaints = df["kategori"].value_counts()
+    # to_remove = num_complaints[num_complaints <= 30].index
+    # df.replace(to_remove, np.nan, inplace=True)
+    return dataset
 
 def create_dataframe_map():
     """Create Pandas DataFrame from local CSV."""
