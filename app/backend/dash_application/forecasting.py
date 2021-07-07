@@ -151,7 +151,7 @@ forecasting = html.Div(
                             id="crossfilter-kategori-2",
                             options=[
                                 {"label": i, "value": i}
-                                for i in df.sort_values("kategori")["kategori"].unique()
+                                for i in jml.sort_values("kategori")["kategori"].unique()
                             ],
                             clearable=True,
                             className="form-dropdown",
