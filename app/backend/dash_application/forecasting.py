@@ -20,8 +20,8 @@ import numpy as np
 import math
 from statsmodels.tsa.arima.model import ARIMA
 import pandas as pd
-
-
+# <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+ 
 # kebutuhan ARIMA
 from statsmodels.tsa.stattools import adfuller
 from statsmodels.tsa.stattools import acf, pacf
@@ -32,13 +32,10 @@ from matplotlib.pylab import rcParams
 rcParams["figure.figsize"] = 10, 6
 from sklearn.metrics import mean_squared_error
 
-df = pd.read_csv("dataset/Piracy.csv", encoding='unicode_escape')
-#proses counting
+df = pd.read_csv("dataset/gabungan.csv", encoding='unicode_escape')
+
 jml = df.groupby(["kategori","Tahun","Bulan"], as_index=False)["Frekuensi"].count()
-#proses ploting
-# Load DataFrame
-# df = create_dataframe()
-#manual differencing'
+
 d=0
 def differencing(series):
     temp=[]
@@ -107,28 +104,50 @@ def production(data):
     model = SARIMAX(data, order=(p,0,q))
     hasil = model.fit()
     return hasil
-    #plotting
-    # plt.figure()
-    # plt.plot( jml['series'],data,color='blue',label='Actual')
-    # plt.plot( jml['series'].iloc[-10:],forecast.values,color='red',label='Forecast')
-    # ramal_akhir.plot(color="Orange")
-    # plt.fill_between(,mean_forecast, confidence_interval['lower Frekuensi'], confidence_interval['upper Frekuensi'], color='pink')
-    # plt.show()
-    # print("Actuall")
-    # print(data)
-    # print("Testing")
-    # print(forecast)
-    # print("Forecast")
-    # print(ramal_akhir)
-    # evaluasi(data, forecast)
-    
-
-# estimasi(jml["Frekuensi"])
 
 
+#card
+card_content = [
+    dbc.CardHeader("Card header"),
+    dbc.CardBody(
+        [
+            html.H5("Card title", className="card-title"),
+            html.P(
+                "This is some card content that we'll reuse",
+                className="card-text",
+            ),
+        ]
+    ),
+]
 
-
-
+coloured_cards = html.Div(
+    [
+        dbc.Row(
+            [
+                dbc.Col(dbc.Card(card_content, color="primary", inverse=True)),
+                dbc.Col(
+                    dbc.Card(card_content, color="secondary", inverse=True)
+                ),
+                dbc.Col(dbc.Card(card_content, color="info", inverse=True)),
+            ],
+            className="mb-4",
+        ),
+        dbc.Row(
+            [
+                dbc.Col(dbc.Card(card_content, color="success", inverse=True)),
+                dbc.Col(dbc.Card(card_content, color="warning", inverse=True)),
+                dbc.Col(dbc.Card(card_content, color="danger", inverse=True)),
+            ],
+            className="mb-4",
+        ),
+        dbc.Row(
+            [
+                dbc.Col(dbc.Card(card_content, color="light")),
+                dbc.Col(dbc.Card(card_content, color="dark", inverse=True)),
+            ]
+        ),
+    ]
+)
 # Create Layout
 forecasting = html.Div(
     [
@@ -143,8 +162,12 @@ forecasting = html.Div(
                         dcc.Dropdown(
                             id="crossfilter-kategori-2",
                             options=[
-                                {"label": i, "value": i}
-                                for i in jml.sort_values("kategori")["kategori"].unique()
+                                {"label": "Piracy", "value": "Piracy"},
+                                {"label": "UII Fishing", "value": "UII Fishing"},
+                                {"label": "Perdagangan Manusia", "value": "Perdagangan Manusia"},
+                                {"label": "Imigran Ilegal", "value": "Imigran Ilegal"},
+                                {"label": "Survei Hidros Ilegal", "value": "Survei Hidros Ilegal"},
+                                # for i in jml.sort_values("kategori")["kategori"].unique()
                             ],
                             clearable=True,
                             className="form-dropdown",
@@ -170,22 +193,22 @@ forecasting = html.Div(
                         "padding": "0 80",
                     },
                 ),
-                # dbc.Card(
-                #     dbc.CardBody(
-                #         [
-                #             html.H4("Title", className="card-title"),
-                #             html.H6("Card subtitle", className="card-subtitle"),
-                #             html.P(
-                #                 "Some quick example text to build on the card title and make "
-                #                 "up the bulk of the card's content.",
-                #                 className="card-text",
-                #             ),
-                #             dbc.CardLink("Card link", href="#"),
-                #             dbc.CardLink("External link", href="https://google.com"),
-                #         ]
-                #     ),
-                #     style={"width": "18rem"},
-                # ),
+                dbc.Card(
+                    dbc.CardBody(
+                        [
+                            html.H4("Title", className="card-title"),
+                            html.H6("Card subtitle", className="card-subtitle"),
+                            html.P(
+                                "Some quick example text to build on the card title and make "
+                                "up the bulk of the card's content.",
+                                className="card-text",
+                            ),
+                            dbc.CardLink("Card link", href="#"),
+                            dbc.CardLink("External link", href="https://google.com"),
+                        ]
+                    ),
+                    style={"width": "18rem"},
+                ),
             ],
             style={
                 "borderBottom": "thin lightgrey solid",
@@ -204,22 +227,18 @@ forecasting = html.Div(
     ],
 )
 def build_graph(kategori):
-    
+    dff=jml[(jml["kategori"]==kategori)]
     # jml.head()
-    waktu=[]
-    #proses penambahan variabel series
-    for i in range(len(jml["Frekuensi"])):
-        waktu.append(i+1) 
-    jml['series'] = waktu
+    
     # dff = df.groupby()
     #identifikasi
-    hasil = Stasionarity_test(jml["Frekuensi"])
+    hasil = Stasionarity_test(dff["Frekuensi"])
     print("P-value %f" % hasil[1])
     p_value = "%f"%hasil[1]
     if float(p_value) > 0.05:
-        df_jml = differencing(jml["Frekuensi"])
+        df_jml = differencing(dff["Frekuensi"])
         estimasi(df_jml)
-        hasil = production(jml["Frekuensi"])
+        hasil = production(dff["Frekuensi"])
         fore=hasil.get_prediction(start=-10)
         forecast = fore.predicted_mean
         ramal = hasil.get_forecast(steps=5)
@@ -227,20 +246,25 @@ def build_graph(kategori):
 
     #estimasi
     else:
-        estimasi(jml["Frekuensi"])
-        hasil = production(jml["Frekuensi"])
+        estimasi(dff["Frekuensi"])
+        hasil = production(dff["Frekuensi"])
         fore=hasil.get_prediction(start=-10)
         forecast = fore.predicted_mean
         ramal = hasil.get_forecast(steps=5)
         ramal_akhir = ramal.predicted_mean
 
     # Create traces
-
+    
+    waktu=[]
+    #proses penambahan variabel series
+    for i in range(len(dff["Frekuensi"])):
+        waktu.append(i+1) 
+    dff['series'] = waktu
     fig = go.Figure()
-    fig.add_trace(go.Scatter(x=jml["series"], y=jml["Frekuensi"],
+    fig.add_trace(go.Scatter(x=waktu, y=dff["Frekuensi"],
                         mode='lines',
                         name='Training'))
-    fig.add_trace(go.Scatter(x=jml['series'].iloc[-10:], y=forecast.values,
+    fig.add_trace(go.Scatter(x=dff['series'].iloc[-10:], y=forecast.values,
                         mode='lines',
                         name='Testing'))
     fig.add_trace(go.Scatter(x=ramal_akhir.index, y=ramal_akhir,
