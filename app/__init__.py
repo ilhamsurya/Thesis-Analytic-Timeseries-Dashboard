@@ -1,8 +1,7 @@
 from flask import Flask
 import dash
 import dash_html_components as html
-import dash_core_components as dcc
-
+import dash_bootstrap_components as dbc
 
 server = Flask(__name__)
 server.debug = True
@@ -23,8 +22,9 @@ dash_app2 = dash.Dash(
     server=server,
     url_base_pathname="/forecasting/",
     external_stylesheets=[
-        "/static/dist/css/styles.css",
+        "/static/dist/main.css",
         "https://fonts.googleapis.com/css?family=Lato",
+        dbc.themes.BOOTSTRAP,
     ],
 )
 
