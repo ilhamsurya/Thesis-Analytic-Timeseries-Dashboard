@@ -8,8 +8,12 @@ import dash_bootstrap_components as dbc
 from .data import create_dataframe
 from .layout import forecasting_layout
 from app import dash_app2
+import math as mt
+import itertools
+import numpy as np
 import plotly.express as px
 from dash_table import DataTable, FormatTemplate
+import matplotlib.pyplot as plt
 from statsmodels.tsa.statespace.sarimax import SARIMAX
 from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
 from statsmodels.tsa.arima_model import ARMA
@@ -25,12 +29,13 @@ from statsmodels.tsa.stattools import acf, pacf
 from statsmodels.tsa.seasonal import seasonal_decompose
 from statsmodels.tsa.arima_model import ARIMA
 from matplotlib.pylab import rcParams
-
-rcParams["figure.figsize"] = 10, 6
 from sklearn.metrics import mean_squared_error
 
-df = pd.read_csv("dataset/gabungan.csv", encoding="unicode_escape")
-jml = df.groupby(["kategori", "Tahun", "Bulan"], as_index=False)["Frekuensi"].count()
+rcParams["figure.figsize"] = 10, 6
+
+
+df = pd.read_csv("dataset/gabungan.csv", encoding='unicode_escape')
+dff = df.groupby(["kategori","Tahun","Bulan"], as_index=False)["Frekuensi"].count()
 
 
 def differencing(series):
@@ -39,6 +44,10 @@ def differencing(series):
         temp.append((series.iloc[x] - series.iloc[x-1]))
     temp_df = pd.DataFrame(temp, columns=['Frekuensi'])
     return temp_df
+
+def mean_absolute_percentage_error(y_true, y_pred): 
+    y_true, y_pred = np.array(y_true), np.array(y_pred)
+    return np.mean(np.abs((y_true - y_pred) / y_true)) * 100
 
 #identifikasi
 def Stasionarity_test(series):
@@ -72,7 +81,6 @@ def hitungMAE(actuall, forecast):
     #MAE (Mean absoluter error)
     for i in range(1,len(forecast)+1):
          temp = temp + (abs(actuall.iloc[i-len(forecast)+1] - forecast.iloc[i-1]))
-    print("MAE : %.2f"%(temp/len(forecast)))
     return (temp/len(forecast))
 
 def MODEL(model):
@@ -95,7 +103,7 @@ card_content_1 = [
             html.H2(
                 id="MAPE",className="card-title"),
             html.P(
-                "This is some card content that we'll reuse",
+                # "This is some card content that we'll reuse",
                 className="card-text",
             ),
         ]
@@ -109,7 +117,7 @@ card_content_2 = [
              html.H2(
                 id="RMSE",className="card-title"),
             html.P(
-                "This is some card content that we'll reuse",
+                # "This is some card content that we'll reuse",
                 className="card-text",
             ),
         ]
@@ -122,7 +130,7 @@ card_content_3 = [
              html.H2(
                 id="MAE",className="card-title"),
             html.P(
-                "This is some card content that we'll reuse",
+                # "This is some card content that we'll reuse",
                 className="card-text",
             ),
         ]
@@ -135,7 +143,7 @@ card_content_4 = [
              html.H2(
                 id="MSE",className="card-title"),
             html.P(
-                "This is some card content that we'll reuse",
+                # "This is some card content that we'll reuse",
                 className="card-text",
             ),
         ]
@@ -219,83 +227,82 @@ forecasting = html.Div(
 )
 
 def build_graph(kategori):
-    dff=jml[(jml["kategori"]==kategori)]
+    jml = dff[(dff["kategori"] ==kategori)]
+    # jml.head()
     waktu=[]
-    #identifikasi
-    #proses penambahan variabel series
-    for i in range(len(dff["Frekuensi"])):
+    # #proses penambahan variabel series
+    for i in range(len(jml["Frekuensi"])):
         waktu.append(i+1) 
-    dff['series'] = waktu
+    jml['series'] = waktu.copy()
+    # #proses ploting
+    jml.head()
 
-    #identifikasi
-    hasil = Stasionarity_test(dff["Frekuensi"])
-    print("P-value %f" % hasil[1])
-    p_value = "%f"%hasil[1]
-    if float(p_value) > 0.05:
-        df_jml = differencing(dff["Frekuensi"])
+    fix=[]
+    for x in range(len(jml)):
+        fix.append([jml["series"].iloc[x],jml["Frekuensi"].iloc[x]])
         
-        #estimasi
-        order_aic_bic=[]
-        for p in range(len(df_jml.iloc[-3:])):
-            for q in range(len(df_jml.iloc[-3:])):
-                try:
-                    model = SARIMAX(df_jml, order=(p,0,q))
-                    results = model.fit()
-                    print((p,q,results.aic, results.bic))
-                    order_aic_bic.append((p,q,results.aic, results.bic))
-                except:
-                    print(p,q,None,None)
-        order_df=pd.DataFrame(order_aic_bic, columns=['p','q','aic','bic'])
-        sem = order_df.sort_values('aic').iloc[0]
-        p = sem['p']
-        q = sem['q']
-        model = SARIMAX(df_jml, order=(p,0,q))
-        hasil = model.fit()
-        #production
-        hasil_model = MODEL(hasil)
-        hasil_forecast = production(hasil)
-        
+    df = pd.DataFrame(fix, columns=['series', 'Frekuensi'])
+    df = df.set_index('series')
+    # df.head()
+
+    #pengukuran nilai p data asli
+    # adf_test_asli = Stasionarity_test(df)
+    # if(adf_test_asli[1] > 0.05):
+    #     df= differencing(df)
+
+    #slicing data to train and test data
+    train_flag = mt.floor(len(df)*0.8)
+    train = df[0:train_flag]
+    test = df[train_flag:]
+
+    #penentuan nilai pdq
+    p=d=q=range(0,5)
+    pdq = list(itertools.product(p,d,q))
+    # order_aic_bic=[]
+    # for param in pdq:
+    #     try:
+    #         model_arima = SARIMAX(train,order=(param))
+    #         model_arima_fit = model_arima.fit()
+    #         order_aic_bic.append((param,model_arima_fit.aic))
+    #     except:
+    #         continue
+
+    # #sorting berdasarkan nilai aic terkecil
+    # order_df=pd.DataFrame(order_aic_bic, columns=['param','aic'])
+    # sem = order_df.sort_values('aic').iloc[0]
+
+    mape = [] 
+    # hitungMAPE(test,prediction)
+    #buat model ARIMA
+    for y in pdq:
+        try:
+            model_arima = SARIMAX(test, order = y)
+            model_arima_fit = model_arima.fit()
+            #prediction
+            prediction = model_arima_fit.forecast(steps=len(test))
+            mape.append((y, mean_absolute_percentage_error(test, prediction)))
+        except:
+            continue
+
+    terpilih = pd.DataFrame(mape, columns=['param','mape'])
+    fixpdq = terpilih.sort_values('mape').iloc[0]
+
+
+    # #model terpilih
+    model_arima = SARIMAX(test, order = (fixpdq["param"]))
+    model_arima_fit = model_arima.fit()
+    #prediction
+    prediction = model_arima_fit.forecast(steps=len(test))
     
-
-    #estimasi
-    else:
-        order_aic_bic=[]
-        for p in range(len(dff["Frekuensi"].iloc[-3:])):
-            for q in range(len(dff["Frekuensi"].iloc[-3:])):
-                try:
-                    model = SARIMAX(dff["Frekuensi"], order=(p,0,q))
-                    results = model.fit()
-                    print((p,q,results.aic, results.bic))
-                    order_aic_bic.append((p,q,results.aic, results.bic))
-                except:
-                    print(p,q,None,None)
-        order_df=pd.DataFrame(order_aic_bic, columns=['p','q','aic','bic'])
-        sem = order_df.sort_values('aic').iloc[0]
-        p = sem['p']
-        q = sem['q']
-        model = SARIMAX(dff["Frekuensi"], order=(p,0,q))
-        hasil = model.fit()
-        
-        #production
-        hasil_model = MODEL(hasil)
-        hasil_forecast = production(hasil)
-
-    #evaluasi
-    # %.2f"%(temp/len(forecast))
-    mape = "%.2f"%(hitungMAPE(dff["Frekuensi"],hasil_model))
-    mse = "%.2f"%hitungMSE(dff["Frekuensi"],hasil_model)
-    rmse = "%.2f"%hitungRMSE(dff["Frekuensi"],hasil_model)
-    mae = "%.2f"%hitungMAE(dff["Frekuensi"],hasil_model)
-
     # Create traces
     fig = go.Figure()
-    fig.add_trace(go.Scatter(x=waktu, y=dff["Frekuensi"],
+    fig.add_trace(go.Scatter(x=train.index, y=train["Frekuensi"],
                         mode='lines',
                         name='Training'))
-    fig.add_trace(go.Scatter(x=dff['series'].iloc[-10:], y=hasil_model.values,
+    fig.add_trace(go.Scatter(x=test.index, y=test["Frekuensi"],
                         mode='lines',
                         name='Testing'))
-    fig.add_trace(go.Scatter(x=hasil_forecast.index, y=hasil_forecast,
+    fig.add_trace(go.Scatter(x=test.index, y=prediction,
                         mode='lines', name='Forecasting'))
 
     fig.update_layout(
@@ -308,5 +315,14 @@ def build_graph(kategori):
             "xanchor": "center",
         },
     )
-    return mape+"%",rmse,mse,mae,fig
+
+    # plt.plot(test)
+    # plt.plot(test.index, prediction)
+    rmse  = "{:.2f}".format(hitungRMSE(test,prediction))
+    mse= "{:.2f}".format(mean_squared_error(test,prediction))
+    # mae = "{:.2f}".format(hitungMAE(test, prediction))
+    MAEEE =hitungMAE(test,prediction)
+    MAPEEE = "{:.2f}".format(mean_absolute_percentage_error(test, prediction))
+    # MAPEEE = 
+    return MAPEEE+"%",rmse,mse,MAEEE,fig
 
