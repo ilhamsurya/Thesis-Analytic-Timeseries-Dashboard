@@ -110,7 +110,7 @@ mapbox = html.Div(
         html.Hr(),
         html.Br(),
         html.Content(
-            "Statistik Pelanggaran Laut", style={"margin-left": "25%", "font-size": 25}
+            "Statistik Pelanggaran Laut", style={"margin-left": "35%", "font-size": 25}
         ),
         html.Br(),
         html.Br(),
@@ -118,22 +118,22 @@ mapbox = html.Div(
             [
                 html.Div(
                     [
-                        html.Div(
-                            [
-                                dcc.RangeSlider(
-                                    id="years_attacks",
-                                    min=2014,
-                                    max=2019,
-                                    dots=True,
-                                    value=[2014, 2019],
-                                    marks={
-                                        str(yr): str(yr) for yr in range(2014, 2019, 5)
-                                    },
-                                ),
-                                html.Br(),
-                            ],
-                            style={"margin-left": "5%", "margin-right": "5%"},
-                        ),
+                        # html.Div(
+                        #     [
+                        #         dcc.RangeSlider(
+                        #             id="years_attacks",
+                        #             min=2014,
+                        #             max=2019,
+                        #             dots=True,
+                        #             value=[2014, 2019],
+                        #             marks={
+                        #                 str(yr): str(yr) for yr in range(2014, 2019, 5)
+                        #             },
+                        #         ),
+                        #         html.Br(),
+                        #     ],
+                        #     style={"margin-left": "5%", "margin-right": "5%"},
+                        # ),
                         dcc.Graph(
                             id="top_countries_attacks",
                             figure={"layout": {"margin": {"r": 10, "t": 50}}},
@@ -144,22 +144,22 @@ mapbox = html.Div(
                 ),
                 html.Div(
                     [
-                        html.Div(
-                            [
-                                dcc.RangeSlider(
-                                    id="years_deaths",
-                                    min=2014,
-                                    max=2019,
-                                    dots=True,
-                                    value=[2014, 2019],
-                                    marks={
-                                        str(yr): str(yr) for yr in range(2014, 2019, 5)
-                                    },
-                                ),
-                                html.Br(),
-                            ],
-                            style={"margin-left": "5%", "margin-right": "5%"},
-                        ),
+                        # html.Div(
+                        #     [
+                        #         dcc.RangeSlider(
+                        #             id="years_deaths",
+                        #             min=2014,
+                        #             max=2019,
+                        #             dots=True,
+                        #             value=[2014, 2019],
+                        #             marks={
+                        #                 str(yr): str(yr) for yr in range(2014, 2019, 5)
+                        #             },
+                        #         ),
+                        #         html.Br(),
+                        #     ],
+                        #     style={"margin-left": "5%", "margin-right": "5%"},
+                        # ),
                         dcc.Graph(
                             id="top_countries_deaths",
                             config={"displayModeBar": False},
@@ -176,11 +176,17 @@ mapbox = html.Div(
 
 @dash_app3.callback(
     Output("by_year_country_world", "figure"),
-    [Input("kategori", "value"), Input("years", "value")],
+    [
+        Input("kategori", "value"),
+        Input("years", "value"),
+        Input("tempat_kejadian", "value"),
+    ],
 )
-def annual_by_country_barchart(kategori, years):
+def annual_by_country_barchart(kategori, years, tempat_kejadian):
     data_map = df[
-        df["kategori"].isin(kategori) & df["Tahun"].between(years[0], years[1])
+        df["kategori"].isin(kategori)
+        & df["Tahun"].between(years[0], years[1])
+        & df["tempat_kejadian"].isin(tempat_kejadian)
     ]
     data_map = data_map.groupby(["Tahun", "kategori"], as_index=False)[
         "tanggal"
@@ -199,9 +205,11 @@ def annual_by_country_barchart(kategori, years):
             title="Kasus Pelanggaran Tahunan "
             + ", ".join(kategori)
             + "  "
+            + "Di ".join(tempat_kejadian)
+            + " "
             + " - ".join([str(y) for y in years]),
-            plot_bgcolor="#eeeeee",
-            paper_bgcolor="#eeeeee",
+            # plot_bgcolor="#eeeeee",
+            # paper_bgcolor="#eeeeee",
             font={"family": "Roboto"},
         ),
     }
@@ -345,7 +353,7 @@ def countries_on_map(kategori, years, tempat_kejadian):
 
 
 @dash_app3.callback(
-    Output("top_countries_attacks", "figure"), [Input("years_attacks", "value")]
+    Output("top_countries_attacks", "figure"), [Input("years", "value")]
 )
 def top_countries_count(years):
     df_top_countries = df[df["Tahun"].between(years[0], years[1])]
@@ -364,8 +372,8 @@ def top_countries_count(years):
             title="Akumulasi Jenis Pelanggaran "
             + "  "
             + " - ".join([str(y) for y in years]),
-            plot_bgcolor="#eeeeee",
-            paper_bgcolor="#eeeeee",
+            # plot_bgcolor="#eeeeee",
+            # paper_bgcolor="#eeeeee",
             font={"family": "Palatino"},
             height=700,
             yaxis={"visible": False},
@@ -373,9 +381,7 @@ def top_countries_count(years):
     }
 
 
-@dash_app3.callback(
-    Output("top_countries_deaths", "figure"), [Input("years_deaths", "value")]
-)
+@dash_app3.callback(Output("top_countries_deaths", "figure"), [Input("years", "value")])
 def top_countries_deaths(years):
     df_top_countries = df[df["Tahun"].between(years[0], years[1])]
     df_top_countries = df_top_countries.groupby(["tempat_kejadian"], as_index=False)[
@@ -393,9 +399,9 @@ def top_countries_deaths(years):
             title="Lokasi Tempat Pelanggaran "
             + "  "
             + " - ".join([str(y) for y in years]),
-            plot_bgcolor="#eeeeee",
+            # plot_bgcolor="#eeeeee",
             font={"family": "Palatino"},
-            paper_bgcolor="#eeeeee",
+            # paper_bgcolor="#eeeeee",
             height=700,
             yaxis={"visible": False},
         ),
