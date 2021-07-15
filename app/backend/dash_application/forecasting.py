@@ -226,7 +226,7 @@ forecasting = html.Div(
     ],
 )
 
-def build_graph(kategori):
+def ARIMA_model(kategori):
     jml = dff[(dff["kategori"] ==kategori)]
     # jml.head()
     waktu=[]
