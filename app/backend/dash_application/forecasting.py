@@ -302,7 +302,7 @@ def ARIMA_model(kategori):
     fig.add_trace(go.Scatter(x=test.index, y=test["Frekuensi"],
                         mode='lines',
                         name='Testing'))
-    fig.add_trace(go.Scatter(x=test.index, y=prediction,
+    fig.add_trace(go.Scatter(x=test.index , y=prediction,
                         mode='lines', name='Forecasting'))
 
     fig.update_layout(
