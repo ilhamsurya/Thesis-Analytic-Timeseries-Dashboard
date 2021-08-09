@@ -89,11 +89,16 @@ mapbox = html.Div(
             ],
             style={
                 "width": "100%",
-                "padding": "80px 80px 80px 80px",
+                "padding": "0px 0px 0px 80px",
                 "color": "black",
             },
         ),
-        dcc.Graph(id="map_world", config={"displayModeBar": False}),
+        dcc.Graph(
+            id="map_world",
+            config={
+                "displayModeBar": True,
+            },
+        ),
         # dcc.Graph(id="choropleth"),
         # dcc.Dropdown(
         #     id="select_type",
