@@ -55,8 +55,8 @@ def sarima_forecast(history, config):
 	return yhat[0]
 
 # root mean squared error or rmse
-def measure_rmse(actual, predicted):
-	return mt.sqrt(mean_squared_error(actual, predicted))
+def measure_mse(actual, predicted):
+	return mean_squared_error(actual, predicted)
 
 # split a univariate dataset into train/test sets
 def train_test_split(data, n_test):
@@ -78,7 +78,7 @@ def walk_forward_validation(data, n_test, cfg):
 		# add actual observation to history for the next loop
 		history.append(test[i])
 	# estimate prediction error
-	error = measure_rmse(test, predictions)
+	error = measure_mse(test, predictions)
 	return error
 
 # score a model, return None on failure
@@ -288,7 +288,7 @@ forecasting = html.Div(
                 html.Div(
                     [
                         html.H6(
-                            """Kategori Pelanggaran 2""",
+                            """Kategori Pelanggaran""",
                             style={"margin-right": "2em"},
                         ),
                         dcc.Dropdown(
@@ -322,7 +322,7 @@ forecasting = html.Div(
                             ],
                             clearable=True,
                             className="form-dropdown",
-                            placeholder="Pilih kategori pelanggaran kedua",
+                            placeholder="Pilih kategori pelanggaran",
                         ),
                     ],
                     style={"width": "49%", "padding-bottom": "50px"},
@@ -507,15 +507,6 @@ def ARIMA_model(kategori):
     Q = int(scores[0][0][19])
     S = int(scores[0][0][22])
 
-    # p = 1
-    # d = 1
-    # q = 2
-
-    # P = 0
-    # D = 0
-    # Q = 0
-    # S = 0
-
 	# split into train and test sets
     X=[]
     X = akhir.values
@@ -539,14 +530,6 @@ def ARIMA_model(kategori):
     	obs = test[t]
     	history.append(obs)
     	print('predicted=%f, expected=%f' % (yhat, obs))
-	
-	# evaluate forecasts
-    # mape = (mean_absolute_percentage_error(test, predictions))
-    # print('Test MAPE: %.3f' % mape+ '%')
-	# # plot forecasts against actual outcomes
-    # plt.plot(test)
-    # plt.plot(predictions, color='red')
-    # plt.show()
     
     # Create traces
     fig = go.Figure()
@@ -583,7 +566,7 @@ def ARIMA_model(kategori):
     return MAPEEE + "%", rmse, mse, MAEEE, fig
 =======
     # rmse  = "{:.2f}".format(hitungRMSE(test,prediction))
-    mse= "{:.2f}".format(measure_rmse(test,predictions))
+    mse= "{:.2f}".format(measure_mse(test,predictions))
     # MAEEE =hitungMAE(test,prediction)
     MAPEEE = "{:.2f}".format(mean_absolute_percentage_error(test, predictions))
     # MAPEEE = 
@@ -594,6 +577,6 @@ def ARIMA_model(kategori):
     print("Nilai Predictions")
     print(predictions)
     print("Nilai pdq PDQS")
-    print(p,d,q,P,D,Q,S)
+    print(scores[0])
     return MAPEEE+"%",mse,fig
 >>>>>>> 2bd337c22d47cbb49f3d0ffa1af99d475c10946a
