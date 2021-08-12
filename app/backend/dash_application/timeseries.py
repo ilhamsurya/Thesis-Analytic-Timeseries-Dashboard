@@ -125,6 +125,7 @@ timeseries = html.Div(
     Output("observed_data", "figure"),
     [Input("category", "value"), Input("tahun", "value"), Input("lokasi", "value")],
 )
+
 def observed(category, tahun, lokasi):
     observed_data = data_timeseries[
         data_timeseries["kategori"].isin(category)
@@ -169,6 +170,7 @@ def observed(category, tahun, lokasi):
     Output("trend_analysis", "figure"),
     [Input("category", "value"), Input("tahun", "value"), Input("lokasi", "value")],
 )
+
 def trend(category, tahun, lokasi):
     trend_data = data_timeseries[
         data_timeseries["kategori"].isin(category)

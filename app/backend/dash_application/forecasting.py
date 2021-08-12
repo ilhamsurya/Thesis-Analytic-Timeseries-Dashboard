@@ -3,41 +3,151 @@ from flask import config
 import plotly.graph_objects as go
 import dash_html_components as html
 import dash_core_components as dcc
-from dash.dependencies import Output, Input, State
+from dash.dependencies import Output, Input
 import dash_bootstrap_components as dbc
-from .data import create_dataframe
-from .layout import forecasting_layout
 from app import dash_app2
 import math as mt
-import itertools
 import numpy as np
-import plotly.express as px
-from dash_table import DataTable, FormatTemplate
 import matplotlib.pyplot as plt
 from statsmodels.tsa.statespace.sarimax import SARIMAX
-from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
-from statsmodels.tsa.arima_model import ARMA
-
-# import pmdarima as pm
-import math
+from datetime import datetime
+from multiprocessing import cpu_count
+from joblib import Parallel
+from joblib import delayed
+from warnings import catch_warnings
+from warnings import filterwarnings
 import pandas as pd
+<<<<<<< HEAD
 
 # <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
 
+=======
+# import pmdarima as pm
+>>>>>>> 2bd337c22d47cbb49f3d0ffa1af99d475c10946a
 # kebutuhan ARIMA
 from statsmodels.tsa.stattools import adfuller
-from statsmodels.tsa.stattools import acf, pacf
-from statsmodels.tsa.seasonal import seasonal_decompose
-from statsmodels.tsa.arima_model import ARIMA
 from matplotlib.pylab import rcParams
 from sklearn.metrics import mean_squared_error
+# <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+ 
 
-rcParams["figure.figsize"] = 10, 6
 
-
+<<<<<<< HEAD
 df = pd.read_csv("dataset/gabungan.csv", encoding="unicode_escape")
 dff = df.groupby(["kategori", "Tahun", "Bulan"], as_index=False)["Frekuensi"].count()
+=======
+rcParams["figure.figsize"] = 10, 6
+df = pd.read_csv("dataset/gabungan.csv", encoding='unicode_escape')
+dff = df.groupby(["kategori","Tahun","Bulan"], as_index=False)["Frekuensi"].count()
+>>>>>>> 2bd337c22d47cbb49f3d0ffa1af99d475c10946a
 
+
+
+# one-step sarima forecast
+def sarima_forecast(history, config):
+	order, sorder, trend = config
+	# define model
+	model = SARIMAX(history, order=order, seasonal_order=sorder, trend=trend, enforce_stationarity=False, enforce_invertibility=False)
+	# fit model
+	model_fit = model.fit(disp=False)
+	# make one step forecast
+	yhat = model_fit.predict(len(history), len(history))
+	return yhat[0]
+
+# root mean squared error or rmse
+def measure_rmse(actual, predicted):
+	return mt.sqrt(mean_squared_error(actual, predicted))
+
+# split a univariate dataset into train/test sets
+def train_test_split(data, n_test):
+	return data[:-n_test], data[-n_test:]
+
+# walk-forward validation for univariate data
+def walk_forward_validation(data, n_test, cfg):
+	predictions = list()
+	# split dataset
+	train, test = train_test_split(data, n_test)
+	# seed history with training dataset
+	history = [x for x in train]
+	# step over each time-step in the test set
+	for i in range(len(test)):
+		# fit model and make forecast for history
+		yhat = sarima_forecast(history, cfg)
+		# store forecast in list of predictions
+		predictions.append(yhat)
+		# add actual observation to history for the next loop
+		history.append(test[i])
+	# estimate prediction error
+	error = measure_rmse(test, predictions)
+	return error
+
+# score a model, return None on failure
+def score_model(data, n_test, cfg, debug=False):
+	result = None
+	# convert config to a key
+	key = str(cfg)
+	# show all warnings and fail on exception if debugging
+	if debug:
+		result = walk_forward_validation(data, n_test, cfg)
+	else:
+		# one failure during model validation suggests an unstable config
+		try:
+			# never show warnings when grid searching, too noisy
+			with catch_warnings():
+				filterwarnings("ignore")
+				result = walk_forward_validation(data, n_test, cfg)
+		except:
+			error = None
+	# check for an interesting result
+	if result is not None:
+		print(' > Model[%s] %.3f' % (key, result))
+	return (key, result)
+
+# grid search configs
+def grid_search(data, cfg_list, n_test, parallel=True):
+	scores = None
+	if parallel:
+		# execute configs in parallel
+		executor = Parallel(n_jobs=cpu_count(), backend='multiprocessing')
+		tasks = (delayed(score_model)(data, n_test, cfg) for cfg in cfg_list)
+		scores = executor(tasks)
+	else:
+		scores = [score_model(data, n_test, cfg) for cfg in cfg_list]
+	# remove empty results
+	scores = [r for r in scores if r[1] != None ]
+	# sort configs by error, asc
+	scores.sort(key=lambda tup: tup[1])
+	return scores
+
+# create a set of sarima configs to try
+def sarima_configs(seasonal=[0]):
+	models = list()
+	# define config lists
+	p_params = [0, 1, 2]
+	d_params = [0, 1]
+	q_params = [0, 1, 2]
+	t_params = ['n','c','t','ct']
+	P_params = [0, 1, 2]
+	D_params = [0, 1]
+	Q_params = [0, 1, 2]
+	m_params = seasonal
+	# create config instances
+	for p in p_params:
+		for d in d_params:
+			for q in q_params:
+				for t in t_params:
+					for P in P_params:
+						for D in D_params:
+							for Q in Q_params:
+								for m in m_params:
+									if ((p != 0) and (d != 0) and (q != 0)):  
+										cfg = [(p,d,q), (P,D,Q,m), t]
+										models.append(cfg)
+	return models
+
+# parse dates
+def custom_parser(x):
+	return datetime.strptime('195'+x, '%Y-%m')
 
 def differencing(series):
     temp = []
@@ -58,6 +168,10 @@ def Stasionarity_test(series):
     return results
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2bd337c22d47cbb49f3d0ffa1af99d475c10946a
 def hitungMAPE(actuall, forecast):
     # MAPE
     temp = 0
@@ -81,11 +195,18 @@ def hitungMSE(actuall, forecast):
 
 def hitungRMSE(actuall, forecast):
     temp = hitungMSE(actuall, forecast)
+<<<<<<< HEAD
     # RMSE
     print("RMSE: %.2f" % (math.sqrt(temp)))
     return math.sqrt(temp)
 
 
+=======
+    #RMSE
+    print("RMSE: %.2f"%(mt.sqrt(temp)))
+    return (mt.sqrt(temp))
+    
+>>>>>>> 2bd337c22d47cbb49f3d0ffa1af99d475c10946a
 def hitungMAE(actuall, forecast):
     temp = 0
     # MAE (Mean absoluter error)
@@ -122,14 +243,24 @@ card_content_1 = [
 ]
 
 card_content_2 = [
-    dbc.CardHeader("RMSE"),
+    dbc.CardHeader("MSE"),
     dbc.CardBody(
         [
+<<<<<<< HEAD
             html.H2(id="RMSE", className="card-title"),
             html.P("Lower values are better", className="card-text"),
+=======
+             html.H2(
+                id="MSE",className="card-title"),
+            html.P(
+                # "This is some card content that we'll reuse",
+                className="card-text",
+            ),
+>>>>>>> 2bd337c22d47cbb49f3d0ffa1af99d475c10946a
         ]
     ),
 ]
+
 card_content_3 = [
     dbc.CardHeader("MAE"),
     dbc.CardBody(
@@ -139,8 +270,9 @@ card_content_3 = [
         ]
     ),
 ]
+
 card_content_4 = [
-    dbc.CardHeader("MSE"),
+    dbc.CardHeader("RMSE"),
     dbc.CardBody(
         [
             html.H2(id="MSE", className="card-title"),
@@ -161,7 +293,16 @@ forecasting = html.Div(
                         ),
                         dcc.Dropdown(
                             id="crossfilter-kategori-2",
+                            # options=[
+                            #     {"label": "Piracy", "value": "Piracy"},
+                            #     {"label": "IUU Fishing", "value": "IUU Fishing"},
+                            #     {"label": "Perdagangan Manusia", "value": "Perdagangan Manusia"},
+                            #     {"label": "Imigran Ilegal", "value": "Imigran Ilegal"},
+                            #     {"label": "Survei Hidros Ilegal", "value": "Survei Hidros Ilegal"},
+                            #     # for i in jml.sort_values("kategori")["kategori"].unique()
+                            # ],
                             options=[
+<<<<<<< HEAD
                                 {"label": "Piracy", "value": "Piracy"},
                                 {"label": "IUU Fishing", "value": "IUU Fishing"},
                                 {
@@ -174,6 +315,10 @@ forecasting = html.Div(
                                     "value": "Survei Hidros Ilegal",
                                 },
                                 # for i in jml.sort_values("kategori")["kategori"].unique()
+=======
+                                {"label": c, "value": c}
+                                for c in sorted(df["kategori"].unique().astype(str))
+>>>>>>> 2bd337c22d47cbb49f3d0ffa1af99d475c10946a
                             ],
                             clearable=True,
                             className="form-dropdown",
@@ -201,6 +346,7 @@ forecasting = html.Div(
                 ),
                 dbc.Row(
                     [
+<<<<<<< HEAD
                         dbc.Col(dbc.Card(card_content_1, color="danger", inverse=True)),
                         dbc.Col(
                             dbc.Card(card_content_2, color="secondary", inverse=True)
@@ -209,6 +355,12 @@ forecasting = html.Div(
                         dbc.Col(
                             dbc.Card(card_content_4, color="warning", inverse=True)
                         ),
+=======
+                        dbc.Col(dbc.Card(card_content_1, color="info", inverse=True)),
+                        dbc.Col(dbc.Card(card_content_2, color="secondary", inverse=True)),
+                        # dbc.Col(dbc.Card(card_content_3, color="info", inverse=True)),
+                        # dbc.Col(dbc.Card(card_content_4, color="warning", inverse=True)),
+>>>>>>> 2bd337c22d47cbb49f3d0ffa1af99d475c10946a
                     ],
                     style={
                         "width": "100%",
@@ -226,15 +378,21 @@ forecasting = html.Div(
 
 
 @dash_app2.callback(
+<<<<<<< HEAD
     Output("MAPE", "children"),
     Output("RMSE", "children"),
     Output("MSE", "children"),
     Output("MAE", "children"),
+=======
+    Output('MAPE','children'),
+    Output('MSE','children'),
+>>>>>>> 2bd337c22d47cbb49f3d0ffa1af99d475c10946a
     Output("crossfilter-indicator-scatter", "figure"),
     [
         Input("crossfilter-kategori-2", "value"),
     ],
 )
+<<<<<<< HEAD
 def build_graph(kategori):
     jml = dff[(dff["kategori"] == kategori)]
     # jml.head()
@@ -313,6 +471,94 @@ def build_graph(kategori):
     fig.add_trace(
         go.Scatter(x=test.index, y=prediction, mode="lines", name="Forecasting")
     )
+=======
+
+def ARIMA_model(kategori):
+    data_frame = dff[(dff["kategori"] ==kategori)]
+    waktu= []
+    for i in range(len(data_frame["Frekuensi"])):
+    	waktu.append(i+1) 
+
+    data_frame["series"] = waktu.copy()    
+    fix=[]
+    for x in range(len(data_frame)):
+    	fix.append([data_frame["series"].iloc[x],data_frame["Frekuensi"].iloc[x]])
+
+    akhir = pd.DataFrame(fix, columns=[ "series","Frekuensi"])
+    akhir = akhir.set_index('series')
+	
+	# data = akhir.values
+    data = akhir.values
+    # # data split
+    n_test = mt.floor(len(data)*0.8)
+    # # model configs
+    cfg_list = sarima_configs()
+    # grid search
+    scores = grid_search(data, cfg_list, n_test)
+    # for cfg, error in scores[:3]:
+    # 	print(cfg, error)
+
+    p = int(scores[0][0][2])
+    d = int(scores[0][0][5])
+    q = int(scores[0][0][8])
+
+    P = int(scores[0][0][13])
+    D = int(scores[0][0][16])
+    Q = int(scores[0][0][19])
+    S = int(scores[0][0][22])
+
+    # p = 1
+    # d = 1
+    # q = 2
+
+    # P = 0
+    # D = 0
+    # Q = 0
+    # S = 0
+
+	# split into train and test sets
+    X=[]
+    X = akhir.values
+    size = int(len(X) * 0.66)
+    train, test = X[0:size], X[size:len(X)]
+    test_index = akhir[size:len(X)]
+    train_index = akhir[0:size]
+    history = [x for x in train]
+    predictions = list()
+	# # walk-forward validation
+    for t in range(len(test)):
+    	if S == 0:
+    		model = SARIMAX(history, order=(p,d,q))
+    	else:
+    		model = SARIMAX(history, order=(p,d,q), seasonal_order=(P,D,Q,S))
+		
+    	model_fit = model.fit()
+    	output = model_fit.forecast()
+    	yhat = output[0]
+    	predictions.append(yhat)
+    	obs = test[t]
+    	history.append(obs)
+    	print('predicted=%f, expected=%f' % (yhat, obs))
+	
+	# evaluate forecasts
+    # mape = (mean_absolute_percentage_error(test, predictions))
+    # print('Test MAPE: %.3f' % mape+ '%')
+	# # plot forecasts against actual outcomes
+    # plt.plot(test)
+    # plt.plot(predictions, color='red')
+    # plt.show()
+    
+    # Create traces
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=train_index.index, y=train_index["Frekuensi"],
+                        mode='lines',
+                        name='Training'))
+    fig.add_trace(go.Scatter(x=test_index.index, y= test_index["Frekuensi"],
+                        mode='lines',
+                        name='Testing'))
+    fig.add_trace(go.Scatter(x=test_index.index, y=predictions,
+                        mode='lines', name='Forecasting'))
+>>>>>>> 2bd337c22d47cbb49f3d0ffa1af99d475c10946a
 
     fig.update_layout(
         yaxis={"title": "Frekuensi"},
@@ -325,6 +571,7 @@ def build_graph(kategori):
         },
     )
 
+<<<<<<< HEAD
     # plt.plot(test)
     # plt.plot(test.index, prediction)
     rmse = "{:.2f}".format(hitungRMSE(test, prediction))
@@ -334,3 +581,19 @@ def build_graph(kategori):
     MAPEEE = "{:.2f}".format(mean_absolute_percentage_error(test, prediction))
     # MAPEEE =
     return MAPEEE + "%", rmse, mse, MAEEE, fig
+=======
+    # rmse  = "{:.2f}".format(hitungRMSE(test,prediction))
+    mse= "{:.2f}".format(measure_rmse(test,predictions))
+    # MAEEE =hitungMAE(test,prediction)
+    MAPEEE = "{:.2f}".format(mean_absolute_percentage_error(test, predictions))
+    # MAPEEE = 
+    print("Nilai test")
+    # print(test[0])
+    print("Nilai train")
+    # print(train[0])
+    print("Nilai Predictions")
+    print(predictions)
+    print("Nilai pdq PDQS")
+    print(p,d,q,P,D,Q,S)
+    return MAPEEE+"%",mse,fig
+>>>>>>> 2bd337c22d47cbb49f3d0ffa1af99d475c10946a

@@ -19,6 +19,7 @@ from app import dash_app3
 
 
 mapbox_access_token = os.environ.get("MAPBOX_ACCESS_KEY")
+# mapbox_access_token = "mapbox://styles/ajimzapar/ckryg81qn1tmk17o83nk61o4f"
 
 
 # Load DataFrame
@@ -216,6 +217,7 @@ def annual_by_country_barchart(kategori, years, tempat_kejadian):
             # plot_bgcolor="#eeeeee",
             # paper_bgcolor="#eeeeee",
             font={"family": "Roboto"},
+            
         ),
     }
 
@@ -313,7 +315,17 @@ def countries_on_map(kategori, years, tempat_kejadian):
     #     zoom=10,
     #     height=600,
     # )
-    fig.update_layout(mapbox_style="stamen-terrain", mapbox_center_lon=180)
+    fig.update_layout(mapbox_style="stamen-terrain", mapbox_center_lon=180, 
+    mapbox_layers=[
+        {
+            "below": 'traces',
+            "sourcetype": "raster",
+            "sourceattribution": "United States Geological Survey",
+            "source": [
+                "mapbox://styles/ajimzapar/ckryg81qn1tmk17o83nk61o4f"
+            ]
+        }
+      ])
     fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
 
     return fig
