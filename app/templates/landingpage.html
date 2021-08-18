@@ -119,9 +119,7 @@
     style="margin-top:6rem"
     />
     <ul class="details">
-      <li>Deskripsi 1</li>
-      <li>Deskripsi 2</li>
-      <li>Deskripsi 3</li>
+
 
     </ul>
   </section>
@@ -139,20 +137,25 @@
 
       />
     <ul class="details">
-      <li>Deskripsi 1</li>
-      <li>Deskripsi 2</li>
-      <li>Deskripsi 3</li>
+
     </ul>
   </section>
   
   <section class="color" style="background: rgb(136, 87, 90);">
     <h2 class="name">Nurallisha Rahmanda - 181511026</h2>
+          <img
+      onmouseover="changePic5()"
+      onmouseout="changePic5()"
+      id="myImg3"
+      src=""
+      width="240"
+      height="270"
+      style="margin-top:9rem"
 
+        />
 
     <ul class="details">
-      <li>Deskripsi 1</li>
-      <li>Deskripsi 2</li>
-      <li>Deskripsi 3</li>
+
     </ul>
   </section>
 
@@ -208,9 +211,9 @@
                       </div>
                     </div>
                     <p class="mt-4 text-lg leading-relaxed">
-                      Analisis pada time series analysis untuk melihat apakah
-                      ada pola naik turun pada dataset dalam kurun waktu
-                      tertentu
+                      Menyajikan pola naik turun jumlah pelanggaran laut dari rentang tahun 2014-2019,
+                      selain itu grafik juga dapat dikustomisasi melalui filter berdasarkan jenis pelanggaran dan 
+                      lokasi pelanggaran 
                     </p>
                   </li>
 
@@ -227,9 +230,10 @@
                       </div>
                     </div>
                     <p class="mt-4 text-lg leading-relaxed">
-                      Analisis pada time series analysis untuk melihat apakah di
-                      dalam dataset terdapat suatu pola yang terjadi hanya pada
-                      waktu tertentu saja
+                      Melakukan identifikasi pola berulang pada data pelanggaran Laut
+                      dan menyajikannya dalam bentuk grafik pola jumlah pelanggaran laut dari rentang tahun 2014-2019,
+                      selain itu grafik juga dapat dikustomisasi melalui filter berdasarkan jenis pelanggaran dan 
+                      lokasi pelanggaran 
                     </p>
                   </li>
                   <li class="py-2">
@@ -245,8 +249,9 @@
                       </div>
                     </div>
                     <p class="mt-4 text-lg leading-relaxed">
-                      Suatu metode untuk memprediksi data di masa depan
-                      berdasarkan data-data di masa lalu
+                      Melakukan peramalan dengan rentang waktu 5 bulan kedepan mengenai 
+                      jumlah pelanggaran laut berdasarkan kategorinya. Peramalan menggunakan ARIMA model dan satuan
+                      MAPE & MSE untuk validasi seberapa akurat model yang diciptakan
                     </p>
                   </li>
                 </ul>
@@ -520,7 +525,7 @@
               data-aos-easing="ease-in-back"
               data-aos-delay="300"
               data-aos-offset="0">
-                Menggunakan data latitude dan longitude dari pelanggaran laut, 
+               Menggunakan data latitude dan longitude dari pelanggaran laut, 
                Scatter Map menvisualisasikan data geografis dalam bentuk data point dalam peta indonesia 
                sehingga menggambarkan sebaran kasus pelanggaran laut yang terjadi di indonesia lebih rinci lagi.
               </p>
@@ -611,6 +616,9 @@
   }
   function changePic4() {
     document.getElementById("myImg2").src = "../static/assets/img/ilham3.png";
+  }
+  function changePic5() {
+    document.getElementById("myImg3").src = "../static/assets/img/lisa.png";
   }
 </script>
 <script src="https://scripts.sirv.com/sirvjs/v3/sirv.js"></script>
