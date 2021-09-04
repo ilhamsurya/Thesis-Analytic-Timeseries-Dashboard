@@ -1,5 +1,6 @@
 import dash
 from flask import config
+from mysql.connector import Connect
 import plotly.graph_objects as go
 import dash_html_components as html
 import dash_core_components as dcc
@@ -17,12 +18,16 @@ from joblib import delayed
 from warnings import catch_warnings
 from warnings import filterwarnings
 import pandas as pd
+
+from app.backend.database.conn import connect
 # import pmdarima as pm
 # kebutuhan ARIMA
 from statsmodels.tsa.stattools import adfuller
 from matplotlib.pylab import rcParams
 from sklearn.metrics import mean_squared_error
 # <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+ 
+ #database
  
 
 
@@ -347,25 +352,37 @@ def ARIMA_model(kategori):
     akhir = akhir.set_index('series')
 	
 	# data = akhir.values
-    data = akhir.values
+    # data = akhir.values
     # # data split
-    n_test = mt.floor(len(data)*0.8)
+    # n_test = mt.floor(len(data)*0.8)
     # # model configs
-    cfg_list = sarima_configs()
+    # cfg_list = sarima_configs()
     # grid search
-    scores = grid_search(data, cfg_list, n_test)
+    # scores = grid_search(data, cfg_list, n_test)
     # for cfg, error in scores[:3]:
     # 	print(cfg, error)
 
-    p = int(scores[0][0][2])
-    d = int(scores[0][0][5])
-    q = int(scores[0][0][8])
+    
+    koneksi = connect()
+    mycursor = koneksi.cursor()
+    mycursor.execute("select * from parameter")
+    result = mycursor.fetchall()
 
-    P = int(scores[0][0][13])
-    D = int(scores[0][0][16])
-    Q = int(scores[0][0][19])
-    S = int(scores[0][0][22])
+    print("Yang dicari")
+    print(kategori)
+    for i in result:
+        if i[8] == kategori:
+            print("Hasil ngambil dari database")
+            print(i[8])
+            p = i[1]
+            d = i[2]
+            q = i[3]
+            P = i[4]
+            D = i[5]
+            Q = i[6]
+            S = i[7]
 
+    # print(result[0])
 	# split into train and test sets
     X=[]
     X = akhir.values
@@ -388,7 +405,7 @@ def ARIMA_model(kategori):
     	predictions.append(yhat)
     	obs = test[t]
     	history.append(obs)
-    	print('predicted=%f, expected=%f' % (yhat, obs))
+    	# print('predicted=%f, expected=%f' % (yhat, obs))
     
     # Create traces
     fig = go.Figure()
@@ -424,5 +441,5 @@ def ARIMA_model(kategori):
     print("Nilai Predictions")
     print(predictions)
     print("Nilai pdq PDQS")
-    print(scores[0])
+    # print(scores[0])
     return MAPEEE+"%",mse,fig

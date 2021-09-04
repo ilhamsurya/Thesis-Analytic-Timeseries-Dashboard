@@ -19,7 +19,9 @@ from app import dash_app3
 
 
 mapbox_access_token = os.environ.get("MAPBOX_ACCESS_KEY")
-# mapbox_access_token = "mapbox://styles/ajimzapar/ckryg81qn1tmk17o83nk61o4f"
+# # pk.eyJ1IjoiYWppbXphcGFyIiwiYSI6ImNrcnlnNDV2djEwNTcyb283d3VlNTVuOWkifQ.Ur_rmcOcCY_mY-zKNPaCLg
+# mapbox_access_token = os.environ.get("pk.eyJ1IjoiYWppbXphcGFyIiwiYSI6ImNrcnlnNDV2djEwNTcyb283d3VlNTVuOWkifQ.Ur_rmcOcCY_mY-zKNPaCLg")
+# # mapbox_access_token = "mapbox://styles/ajimzapar/ckryg81qn1tmk17o83nk61o4f"
 
 
 # Load DataFrame
